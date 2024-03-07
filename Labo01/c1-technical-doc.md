@@ -3,12 +3,12 @@
 # SSH Srv - DMZ
 ```bash
 ssh devopsteam05@15.188.43.46 -i ~/.ssh/CLD_KEY_DMZ_DEVOPSTEAM05.pem
-ssh devopsteam05@15.188.43.46 22 -i ~/.ssh/CLD_KEY_DMZ_DEVOPSTEAM05.pem
 ```
 
-# Connect to our Host
+# Connect to our Drupal Host
 ```bash
-ssh host -p 2222
+ssh devopsteam05@15.188.43.46 -i ~/.ssh/CLD_KEY_DMZ_DEVOPSTEAM05.pem -L 2223:10.0.5.9:22
+ssh bitnami@localhost -p 2223 -i ~/.ssh/CLD_KEY_DRUPAL_DEVOPSTEAM05.pem
 ```
 
 ## Réalisation
