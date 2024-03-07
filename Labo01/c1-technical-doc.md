@@ -396,8 +396,8 @@ aws ec2 stop-instances \
 ```bash
 aws ec2 create-image \
     --instance-id $INSTANCE_ID \
-    --name "EC2_PRIVATE_DRUPAL_DEVOPSTEAM05_WEEK03" \
-    --description "EC2_PRIVATE_DRUPAL_DEVOPSTEAM05_WEEK03"
+    --name "EC2_PRIVATE_DRUPAL_${GROUP_NAME}_WEEK03" \
+    --description "EC2_PRIVATE_DRUPAL_${GROUP_NAME}_WEEK03" \
     --profile $PROFILE
 ```
 
