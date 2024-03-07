@@ -315,3 +315,88 @@ aws ec2 run-instances \
 ```
 
 The ID we received, we saved as a constant in the variables on the top of this document.
+
+### Task 04 - SSH Access to your private Drupal Instance
+```bash
+ssh devopsteam05@15.188.43.46 -i ~/.ssh/CLD_KEY_DMZ_DEVOPSTEAM05.pem -L 2223:10.0.5.10:22
+ssh bitnami@localhost -p 2223 -i ~/.ssh/CLD_KEY_DRUPAL_DEVOPSTEAM05.pem
+```
+
+### Task 05 - Web access to your private Drupal Instance
+
+#### INSIDE THE SUBNET
+
+* Test directly on the ssh srv (inside the private subnet)
+
+```
+[INPUT]
+curl localhost
+
+[OUTPUT]
+you get the html content of the home page
+```
+
+* Change the default port of apache
+
+```
+file : /opt/bitnami/apache2/conf/httpd.conf
+LISTEN 8080
+```
+
+```
+file : /opt/bitnami/apache2/conf/bitnami/bitnami.conf
+<VirtualHost _default_:8080>
+```
+
+```
+file : /opt/bitnami/apache2/conf/vhosts/
+<VirtualHost 127.0.0.1:8080 _default_:8080>
+```
+
+* Restart Apache Server
+
+```
+sudo /opt/bitnami/ctlscript.sh restart apache
+```
+
+#### FROM THE DMZ
+
+* Test directly on the ssh srv (outside the private subnet)
+
+```
+[INPUT]
+curl localhost
+
+[OUTPUT]
+you get the html content of the home page
+```
+
+#### FROM THE WEB (THROUGH SSH)
+
+* Update your ssh string connection adding a http tunnel to your Drupal instance
+
+```bash
+ssh devopsteam05@15.188.43.46 -i ~/.ssh/CLD_KEY_DMZ_DEVOPSTEAM05.pem -L 8888:10.0.5.10:8080
+```
+
+http://localhost:8888
+
+* Test directly on your localhost, using your browser
+
+### Step 6
+#### Stop the Instance
+
+```bash
+aws ec2 stop-instances \
+    --instance-ids $INSTANCE_ID \
+    --profile $PROFILE
+```
+
+#### Create a Image of the Instance
+
+#### Terminate the Instance
+```bash
+aws ec2 teminate-instances \
+    --instance-ids $INSTANCE_ID \
+    --profile $PROFILE
+```
