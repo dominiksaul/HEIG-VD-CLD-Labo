@@ -1,15 +1,12 @@
 # CLD - LABO 01
 
+# SSH Srv - DMZ
+```bash
+ssh devopsteam05@15.188.43.46 -i ~/.ssh/CLD_KEY_DMZ_DEVOPSTEAM05.pem
+ssh devopsteam05@15.188.43.46 22 -i ~/.ssh/CLD_KEY_DMZ_DEVOPSTEAM05.pem
+```
 
-# connect with ssh to ssh host
-```bash
-ssh SSH_USER@SSH_HOST 22 -i ~/.ssh/CLD_KEY_DMZ_SSH_CLD_DEVOPSTEAM05-DS.pem
-```
-Connect to Proxy Host
-```bash
-ssh –L 2222:SSH_HOST:22
-```
-Connect to our Host
+# Connect to our Host
 ```bash
 ssh host -p 2222
 ```
@@ -24,7 +21,7 @@ HOST="10.0.5.10"
 
 PROFILE="cld-team05"
 CIDRBLOCK_VPC="10.0.0.0/24"
-CIDRBLOCK_SUBNET="10.0.5.0/24"
+CIDRBLOCK_SUBNET="10.0.5.0/28"
 CIDRBLOCK_INTERNET="0.0.0.0/0"
 GROUP_NAME="DEVOPSTEAM05"
 INSTANCE_TYPE="t3.micro"
@@ -42,14 +39,12 @@ SECURITY_GROUP_ID="sg-062486a11cff2fedb"
 We used the following command to get the id of the VPC.
 The ID we received, we saved as a constant in the variables on the top of this document.
 
+```
 [INPUT]
-```bash
 aws ec2 describe-vpcs \
     --profile $PROFILE
-```
 
 [OUTPUT]
-```
 {
     "Vpcs": [
         {
@@ -80,55 +75,19 @@ aws ec2 describe-vpcs \
 }
 ```
 
-### Get Internet Gateway ID
-
-We used the following command to get the id of the Internet Gateway.
-The ID we received, we saved as a constant in the variables on the top of this document.
-
-[INPUT]
-```bash
-aws ec2 describe-internet-gateways \
-    --profile $PROFILE
-```
-
-[OUTPUT]
-```
-{
-    "InternetGateways": [
-        {
-            "Attachments": [
-                {
-                    "State": "available",
-                    "VpcId": "vpc-03d46c285a2af77ba"
-                }
-            ],
-            "InternetGatewayId": "igw-0da47f5a441df46e0",
-            "OwnerId": "709024702237",
-            "Tags": [
-                {
-                    "Key": "Name",
-                    "Value": "CLD-IGW"
-                }
-            ]
-        }
-    ]
-}
-```
-
 ### CREATE Subnet
 
 [Documentation AWS - Subnet](https://docs.aws.amazon.com/cli/latest/reference/ec2/create-subnet.html)
 
-[INPUT]
 ```bash
+[INPUT]
 aws ec2 create-subnet \
     --vpc-id $VPC_ID \
     --cidr-block $CIDRBLOCK_SUBNET \
+    --tag-specifications "ResourceType=subnet, Tags=[{Key=Name,Value=SUB-PRIVATE-$GROUP_NAME}]" \
     --profile $PROFILE
-```
 
 [OUTPUT]
-```
 {
     "Subnet": {
         "AvailabilityZone": "eu-west-3a",
@@ -160,15 +119,13 @@ The ID we received, we saved as a constant in the variables on the top of this d
 
 [Documentation AWS - Route Table](https://docs.aws.amazon.com/cli/latest/reference/ec2/create-route-table.html)
 
+```
 [INPUT]
-```bash
 aws ec2 create-route-table \
     --vpc-id $VPC_ID \
     --profile $PROFILE
-```
 
 [OUTPUT]
-```
 {
     "RouteTable": {
         "Associations": [],
@@ -194,32 +151,29 @@ The ID we received, we saved as a constant in the variables on the top of this d
 
 [Documentation AWS - Route](https://docs.aws.amazon.com/cli/latest/reference/ec2/create-route.html)
 
+```
 [INPUT]
-```bash
 aws ec2 create-route \
     --route-table-id $ROUTE_TABLE_ID \
     --destination-cidr-block $CIDRBLOCK_INTERNET \
     --gateway-id $INTERNET_GATEWAY_ID \
     --profile $PROFILE
-```
 
 [OUTPUT]
-```
+
 ```
 The ID we received, we saved as a constant in the variables on the top of this document.
 
 ### Associate Subnet to route table
 
+```
 [INPUT]
-```bash
 aws ec2 associate-route-table \
     --subnet-id $SUBNET_ID \
     --route-table-id $ROUTE_TABLE_ID \
     --profile $PROFILE
-```
 
 [OUTPUT]
-```
 {
     "AssociationId": "rtbassoc-0a1f7a5ee7f933ee4",
     "AssociationState": {
@@ -234,17 +188,15 @@ The ID we received, we saved as a constant in the variables on the top of this d
 
 [Documentation AWS - Security Group](https://docs.aws.amazon.com/cli/latest/reference/ec2/create-security-group.html)
 
+```
 [INPUT]
-```bash
 aws ec2 create-security-group \
     --vpc-id $VPC_ID \
     --group-name $GROUP_NAME \
     --description $GROUP_NAME \
     --profile $PROFILE
-```
 
 [OUTPUT]
-```
 {
     "GroupId": "sg-062486a11cff2fedb"
 }
@@ -258,17 +210,16 @@ The ID we received, we saved as a constant in the variables on the top of this d
 [Documentation AWS - commande authorize-security-group-ingress](https://awscli.amazonaws.com/v2/documentation/api/latest/reference/ec2/authorize-security-group-ingress.html)
 
 Create SSH Security Group Rule
-```bash
+```
+[INPUT]
 aws ec2 authorize-security-group-ingress \
 --group-id $SECURITY_GROUP_ID \
 --protocol tcp \
 --port 22 \
 --cidr 10.0.0.0/28 \
 --profile $PROFILE
-```
 
 [OUTPUT]
-```
 {
     "Return": true,
     "SecurityGroupRules": [
@@ -287,17 +238,16 @@ aws ec2 authorize-security-group-ingress \
 ```
 
 Create HTTP Security Group Rule
-```bash
+```
+[INPUT]
 aws ec2 authorize-security-group-ingress \
 --group-id $SECURITY_GROUP_ID \
 --protocol tcp \
 --port 8080 \
 --cidr 10.0.0.0/28 \
 --profile $PROFILE
-```
 
 [OUTPUT]
-```
 {
     "Return": true,
     "SecurityGroupRules": [
@@ -320,18 +270,18 @@ aws ec2 authorize-security-group-ingress \
 [Documentation AWS - Run Instance](https://docs.aws.amazon.com/cli/latest/reference/ec2/run-instance.html)
 [Documentation Deploy Drupal](https://aws.amazon.com/getting-started/hands-on/deploy-drupal-with-amazon-rds/)
 
+
+```
 [INPUT]
-```bash
 aws ec2 run-instances \
     --image-id <ami-id> \
     --instance-type $INSTANCE_TYPE \
     --subnet-id $SUBNET_ID \
     --security-group-ids <security-group-id> <security-group-id> … \
     --key-name <ec2-key-pair-name>
-```
 
 [OUTPUT]
-```
+
 ```
 
 The ID we received, we saved as a constant in the variables on the top of this document.
