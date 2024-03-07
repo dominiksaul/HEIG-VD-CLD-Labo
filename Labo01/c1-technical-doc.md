@@ -28,10 +28,20 @@ INSTANCE_TYPE="t3.micro"
 
 VPC_ID="vpc-03d46c285a2af77ba"
 INTERNET_GATEWAY_ID="igw-0da47f5a441df46e0"
+IMAGE_ID="ami-00b3a1b7cfab20134"
+
 SUBNET_ID="subnet-052a4a1a63b6df5f4"
 ROUTE_TABLE_ID="rtb-01a7d54e59ff42b92"
 SECURITY_GROUP_ID="sg-062486a11cff2fedb"
+KEYPAIR_ID_DMZ="key-01fa0354ab95d2bc4"
+KEYPAIR_ID_DRUPAL="key-0864f1c5a64dd4248"
 ```
+
+"KeyPairId": "key-01fa0354ab95d2bc4",
+"KeyName": "CLD_KEY_DMZ_DEVOPSTEAM05",
+"KeyPairId": "key-0864f1c5a64dd4248",
+"KeyName": "CLD_KEY_DRUPAL_DEVOPSTEAM05",
+
 
 
 ### Get VPC ID
@@ -73,7 +83,7 @@ The ID we received, we saved as a constant in the variables on the top of this d
 [INPUT]
 aws ec2 create-route-table \
     --vpc-id $VPC_ID \
-    --tag-specifications "ResourceType=subnet, Tags=[{Key=Name,Value=RTBLE-PRIVATE-DRUPAL-$GROUP_NAME}]" \
+    --tag-specifications "ResourceType=route-table, Tags=[{Key=Name,Value=RTBLE-PRIVATE-DRUPAL-$GROUP_NAME}]" \
     --profile $PROFILE
 
 [OUTPUT]
@@ -123,7 +133,7 @@ aws ec2 create-security-group \
     --vpc-id $VPC_ID \
     --group-name $GROUP_NAME \
     --description $GROUP_NAME \
-    --tag-specifications "ResourceType=subnet, Tags=[{Key=Name,Value=SG-PRIVATE-DRUPAL-$GROUP_NAME}]" \
+    --tag-specifications "ResourceType=security-group, Tags=[{Key=Name,Value=SG-PRIVATE-DRUPAL-$GROUP_NAME}]" \
     --profile $PROFILE
 
 [OUTPUT]
@@ -162,24 +172,10 @@ aws ec2 authorize-security-group-ingress \
 --profile $PROFILE
 
 [OUTPUT]
-{
-    "Return": true,
-    "SecurityGroupRules": [
-        {
-            "SecurityGroupRuleId": "sgr-02e412cbe52f12f39",
-            "GroupId": "sg-062486a11cff2fedb",
-            "GroupOwnerId": "709024702237",
-            "IsEgress": false,
-            "IpProtocol": "tcp",
-            "FromPort": 8080,
-            "ToPort": 8080,
-            "CidrIpv4": "10.0.0.0/28"
-        }
-    ]
-}
+
 ```
 
-### Create Instance for Drupal 
+### Deploy Bitnami/Drupal Instance 
 
 [Documentation AWS - Run Instance](https://docs.aws.amazon.com/cli/latest/reference/ec2/run-instance.html)
 [Documentation Deploy Drupal](https://aws.amazon.com/getting-started/hands-on/deploy-drupal-with-amazon-rds/)
@@ -188,11 +184,13 @@ aws ec2 authorize-security-group-ingress \
 ```bash
 [INPUT]
 aws ec2 run-instances \
-    --image-id <ami-id> \
+    --image-id $IMAGE_ID \
     --instance-type $INSTANCE_TYPE \
     --subnet-id $SUBNET_ID \
-    --security-group-ids <security-group-id> <security-group-id> … \
-    --key-name <ec2-key-pair-name>
+    --security-group-ids $SECURITY_GROUP_ID \
+    --tag-specifications "ResourceType=instance, Tags=[{Key=Name,Value=EC2_PRIVATE_DRUPAL_$GROUP_NAME}]" \
+    --key-name $KEYPAIR_ID_DRUPAL \
+    --profile $PROFILE
 
 [OUTPUT]
 
