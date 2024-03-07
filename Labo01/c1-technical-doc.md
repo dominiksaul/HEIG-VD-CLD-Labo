@@ -39,40 +39,13 @@ SECURITY_GROUP_ID="sg-062486a11cff2fedb"
 We used the following command to get the id of the VPC.
 The ID we received, we saved as a constant in the variables on the top of this document.
 
-```
+```bash
 [INPUT]
 aws ec2 describe-vpcs \
     --profile $PROFILE
 
 [OUTPUT]
-{
-    "Vpcs": [
-        {
-            "CidrBlock": "10.0.0.0/16",
-            "DhcpOptionsId": "dopt-e979f380",
-            "State": "available",
-            "VpcId": "vpc-03d46c285a2af77ba",
-            "OwnerId": "709024702237",
-            "InstanceTenancy": "default",
-            "CidrBlockAssociationSet": [
-                {
-                    "AssociationId": "vpc-cidr-assoc-0f2a3a4908a2a1ad4",
-                    "CidrBlock": "10.0.0.0/16",
-                    "CidrBlockState": {
-                        "State": "associated"
-                    }
-                }
-            ],
-            "IsDefault": false,
-            "Tags": [
-                {
-                    "Key": "Name",
-                    "Value": "VPC-CLD"
-                }
-            ]
-        }
-    ]
-}
+
 ```
 
 ### CREATE Subnet
@@ -88,30 +61,7 @@ aws ec2 create-subnet \
     --profile $PROFILE
 
 [OUTPUT]
-{
-    "Subnet": {
-        "AvailabilityZone": "eu-west-3a",
-        "AvailabilityZoneId": "euw3-az1",
-        "AvailableIpAddressCount": 251,
-        "CidrBlock": "10.0.5.0/24",
-        "DefaultForAz": false,
-        "MapPublicIpOnLaunch": false,
-        "State": "available",
-        "SubnetId": "subnet-034cdc7715a263f4d",
-        "VpcId": "vpc-03d46c285a2af77ba",
-        "OwnerId": "709024702237",
-        "AssignIpv6AddressOnCreation": false,
-        "Ipv6CidrBlockAssociationSet": [],
-        "SubnetArn": "arn:aws:ec2:eu-west-3:709024702237:subnet/subnet-034cdc7715a263f4d",
-        "EnableDns64": false,
-        "Ipv6Native": false,
-        "PrivateDnsNameOptionsOnLaunch": {
-            "HostnameType": "ip-name",
-            "EnableResourceNameDnsARecord": false,
-            "EnableResourceNameDnsAAAARecord": false
-        }
-    }
-}
+
 ```
 The ID we received, we saved as a constant in the variables on the top of this document.
 
@@ -119,31 +69,15 @@ The ID we received, we saved as a constant in the variables on the top of this d
 
 [Documentation AWS - Route Table](https://docs.aws.amazon.com/cli/latest/reference/ec2/create-route-table.html)
 
-```
+```bash
 [INPUT]
 aws ec2 create-route-table \
     --vpc-id $VPC_ID \
+    --tag-specifications "ResourceType=subnet, Tags=[{Key=Name,Value=RTBLE-PRIVATE-DRUPAL-$GROUP_NAME}]" \
     --profile $PROFILE
 
 [OUTPUT]
-{
-    "RouteTable": {
-        "Associations": [],
-        "PropagatingVgws": [],
-        "RouteTableId": "rtb-0ef959c81b78fa5d8",
-        "Routes": [
-            {
-                "DestinationCidrBlock": "10.0.0.0/16",
-                "GatewayId": "local",
-                "Origin": "CreateRouteTable",
-                "State": "active"
-            }
-        ],
-        "Tags": [],
-        "VpcId": "vpc-03d46c285a2af77ba",
-        "OwnerId": "709024702237"
-    }
-}
+
 ```
 The ID we received, we saved as a constant in the variables on the top of this document.
 
@@ -151,7 +85,7 @@ The ID we received, we saved as a constant in the variables on the top of this d
 
 [Documentation AWS - Route](https://docs.aws.amazon.com/cli/latest/reference/ec2/create-route.html)
 
-```
+```bash
 [INPUT]
 aws ec2 create-route \
     --route-table-id $ROUTE_TABLE_ID \
@@ -166,7 +100,7 @@ The ID we received, we saved as a constant in the variables on the top of this d
 
 ### Associate Subnet to route table
 
-```
+```bash
 [INPUT]
 aws ec2 associate-route-table \
     --subnet-id $SUBNET_ID \
@@ -174,12 +108,7 @@ aws ec2 associate-route-table \
     --profile $PROFILE
 
 [OUTPUT]
-{
-    "AssociationId": "rtbassoc-0a1f7a5ee7f933ee4",
-    "AssociationState": {
-        "State": "associated"
-    }
-}
+
 ```
 
 The ID we received, we saved as a constant in the variables on the top of this document.
@@ -188,18 +117,17 @@ The ID we received, we saved as a constant in the variables on the top of this d
 
 [Documentation AWS - Security Group](https://docs.aws.amazon.com/cli/latest/reference/ec2/create-security-group.html)
 
-```
+```bash
 [INPUT]
 aws ec2 create-security-group \
     --vpc-id $VPC_ID \
     --group-name $GROUP_NAME \
     --description $GROUP_NAME \
+    --tag-specifications "ResourceType=subnet, Tags=[{Key=Name,Value=SG-PRIVATE-DRUPAL-$GROUP_NAME}]" \
     --profile $PROFILE
 
 [OUTPUT]
-{
-    "GroupId": "sg-062486a11cff2fedb"
-}
+
 ```
 
 The ID we received, we saved as a constant in the variables on the top of this document.
@@ -210,35 +138,21 @@ The ID we received, we saved as a constant in the variables on the top of this d
 [Documentation AWS - commande authorize-security-group-ingress](https://awscli.amazonaws.com/v2/documentation/api/latest/reference/ec2/authorize-security-group-ingress.html)
 
 Create SSH Security Group Rule
-```
+```bash
 [INPUT]
 aws ec2 authorize-security-group-ingress \
---group-id $SECURITY_GROUP_ID \
---protocol tcp \
---port 22 \
---cidr 10.0.0.0/28 \
---profile $PROFILE
+    --group-id $SECURITY_GROUP_ID \
+    --protocol tcp \
+    --port 22 \
+    --cidr 10.0.0.0/28 \
+    --profile $PROFILE
 
 [OUTPUT]
-{
-    "Return": true,
-    "SecurityGroupRules": [
-        {
-            "SecurityGroupRuleId": "sgr-0e14ef8bd7e9b9b5f",
-            "GroupId": "sg-062486a11cff2fedb",
-            "GroupOwnerId": "709024702237",
-            "IsEgress": false,
-            "IpProtocol": "tcp",
-            "FromPort": 22,
-            "ToPort": 22,
-            "CidrIpv4": "10.0.0.0/28"
-        }
-    ]
-}
+
 ```
 
 Create HTTP Security Group Rule
-```
+```bash
 [INPUT]
 aws ec2 authorize-security-group-ingress \
 --group-id $SECURITY_GROUP_ID \
@@ -271,7 +185,7 @@ aws ec2 authorize-security-group-ingress \
 [Documentation Deploy Drupal](https://aws.amazon.com/getting-started/hands-on/deploy-drupal-with-amazon-rds/)
 
 
-```
+```bash
 [INPUT]
 aws ec2 run-instances \
     --image-id <ami-id> \
