@@ -393,6 +393,13 @@ aws ec2 stop-instances \
 ```
 
 #### Create a Image of the Instance
+```bash
+aws ec2 create-image \
+    --instance-id $INSTANCE_ID \
+    --name "EC2_PRIVATE_DRUPAL_DEVOPSTEAM05_WEEK03" \
+    --description "EC2_PRIVATE_DRUPAL_DEVOPSTEAM05_WEEK03"
+    --profile $PROFILE
+```
 
 #### Terminate the Instance
 ```bash
