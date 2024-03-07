@@ -14,7 +14,7 @@ Il s'agit de déployer:
     * Un serveur SSH offrant l'accès à l'admin système pour gérer les différentes instances
     * Un serveur NAT offrant le service de translation d'adresse nécessaire pour permettre aux instances d'accéder au net.
 
-![Infra](./img/Infra.png)
+![Infra](./img/CLD_AWS_INFA.PNG)
 
 ---
 
