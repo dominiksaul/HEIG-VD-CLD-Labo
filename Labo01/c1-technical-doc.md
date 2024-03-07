@@ -7,7 +7,7 @@ ssh devopsteam05@15.188.43.46 -i ~/.ssh/CLD_KEY_DMZ_DEVOPSTEAM05.pem
 
 # Connect to our Drupal Host
 ```bash
-ssh devopsteam05@15.188.43.46 -i ~/.ssh/CLD_KEY_DMZ_DEVOPSTEAM05.pem -L 2223:10.0.5.9:22
+ssh devopsteam05@15.188.43.46 -i ~/.ssh/CLD_KEY_DMZ_DEVOPSTEAM05.pem -L 2223:10.0.5.10:22
 ssh bitnami@localhost -p 2223 -i ~/.ssh/CLD_KEY_DRUPAL_DEVOPSTEAM05.pem
 ```
 
@@ -25,6 +25,7 @@ CIDRBLOCK_SUBNET="10.0.5.0/28"
 CIDRBLOCK_INTERNET="0.0.0.0/0"
 GROUP_NAME="DEVOPSTEAM05"
 INSTANCE_TYPE="t3.micro"
+DRUPAL_INSTANCE_IP="10.0.5.10"
 
 VPC_ID="vpc-03d46c285a2af77ba"
 INTERNET_GATEWAY_ID="igw-0da47f5a441df46e0"
@@ -35,7 +36,7 @@ ROUTE_TABLE_ID="rtb-01a7d54e59ff42b92"
 SECURITY_GROUP_ID="sg-0867c32d68bac6981"
 KEYPAIR_DMZ="CLD_KEY_DMZ_DEVOPSTEAM05"
 KEYPAIR_DRUPAL="CLD_KEY_DRUPAL_DEVOPSTEAM05"
-INSTANCE_ID="i-02238794a12e931a8"
+INSTANCE_ID="i-0007ac051b626d5b4"
 ```
 
 
@@ -185,6 +186,7 @@ aws ec2 run-instances \
     --security-group-ids $SECURITY_GROUP_ID \
     --tag-specifications "ResourceType=instance, Tags=[{Key=Name,Value=EC2_PRIVATE_DRUPAL_$GROUP_NAME}]" \
     --key-name $KEYPAIR_DRUPAL \
+    --private-ip-address $DRUPAL_INSTANCE_IP \
     --profile $PROFILE
 
 [OUTPUT]
@@ -194,10 +196,10 @@ aws ec2 run-instances \
         {
             "AmiLaunchIndex": 0,
             "ImageId": "ami-00b3a1b7cfab20134",
-            "InstanceId": "i-02238794a12e931a8",
+            "InstanceId": "i-0007ac051b626d5b4",
             "InstanceType": "t3.micro",
             "KeyName": "CLD_KEY_DRUPAL_DEVOPSTEAM05",
-            "LaunchTime": "2024-03-07T15:31:07+00:00",
+            "LaunchTime": "2024-03-07T16:00:10+00:00",
             "Monitoring": {
                 "State": "disabled"
             },
@@ -206,8 +208,8 @@ aws ec2 run-instances \
                 "GroupName": "",
                 "Tenancy": "default"
             },
-            "PrivateDnsName": "ip-10-0-5-9.eu-west-3.compute.internal",
-            "PrivateIpAddress": "10.0.5.9",
+            "PrivateDnsName": "ip-10-0-5-10.eu-west-3.compute.internal",
+            "PrivateIpAddress": "10.0.5.10",
             "ProductCodes": [],
             "PublicDnsName": "",
             "State": {
@@ -219,15 +221,15 @@ aws ec2 run-instances \
             "VpcId": "vpc-03d46c285a2af77ba",
             "Architecture": "x86_64",
             "BlockDeviceMappings": [],
-            "ClientToken": "3be532f3-f02e-4b1a-9005-da69e0f75c5a",
+            "ClientToken": "4625ec60-fac7-496a-b4a3-8cf9b83f0ca6",
             "EbsOptimized": false,
             "EnaSupport": true,
             "Hypervisor": "xen",
             "NetworkInterfaces": [
                 {
                     "Attachment": {
-                        "AttachTime": "2024-03-07T15:31:07+00:00",
-                        "AttachmentId": "eni-attach-058f1de28c0e16cd8",
+                        "AttachTime": "2024-03-07T16:00:10+00:00",
+                        "AttachmentId": "eni-attach-07eb8b30271069482",
                         "DeleteOnTermination": true,
                         "DeviceIndex": 0,
                         "Status": "attaching",
@@ -241,14 +243,14 @@ aws ec2 run-instances \
                         }
                     ],
                     "Ipv6Addresses": [],
-                    "MacAddress": "06:62:2a:d4:e0:63",
-                    "NetworkInterfaceId": "eni-088ce98f99d8eeacb",
+                    "MacAddress": "06:87:61:4f:25:ed",
+                    "NetworkInterfaceId": "eni-0158c569d096d71b2",
                     "OwnerId": "709024702237",
-                    "PrivateIpAddress": "10.0.5.9",
+                    "PrivateIpAddress": "10.0.5.10",
                     "PrivateIpAddresses": [
                         {
                             "Primary": true,
-                            "PrivateIpAddress": "10.0.5.9"
+                            "PrivateIpAddress": "10.0.5.10"
                         }
                     ],
                     "SourceDestCheck": true,
@@ -307,8 +309,9 @@ aws ec2 run-instances \
         }
     ],
     "OwnerId": "709024702237",
-    "ReservationId": "r-0e7e91d68b81ec0da"
+    "ReservationId": "r-0843ad929e651434e"
 }
+
 ```
 
 The ID we received, we saved as a constant in the variables on the top of this document.
