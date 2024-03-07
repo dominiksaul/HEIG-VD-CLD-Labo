@@ -33,15 +33,10 @@ IMAGE_ID="ami-00b3a1b7cfab20134"
 SUBNET_ID="subnet-052a4a1a63b6df5f4"
 ROUTE_TABLE_ID="rtb-01a7d54e59ff42b92"
 SECURITY_GROUP_ID="sg-0867c32d68bac6981"
-KEYPAIR_ID_DMZ="key-01fa0354ab95d2bc4"
-KEYPAIR_ID_DRUPAL="key-0864f1c5a64dd4248"
+KEYPAIR_DMZ="CLD_KEY_DMZ_DEVOPSTEAM05"
+KEYPAIR_DRUPAL="CLD_KEY_DRUPAL_DEVOPSTEAM05"
+INSTANCE_ID="i-02238794a12e931a8"
 ```
-
-"KeyPairId": "key-01fa0354ab95d2bc4",
-"KeyName": "CLD_KEY_DMZ_DEVOPSTEAM05",
-"KeyPairId": "key-0864f1c5a64dd4248",
-"KeyName": "CLD_KEY_DRUPAL_DEVOPSTEAM05",
-
 
 
 ### Get VPC ID
@@ -189,11 +184,131 @@ aws ec2 run-instances \
     --subnet-id $SUBNET_ID \
     --security-group-ids $SECURITY_GROUP_ID \
     --tag-specifications "ResourceType=instance, Tags=[{Key=Name,Value=EC2_PRIVATE_DRUPAL_$GROUP_NAME}]" \
-    --key-name $KEYPAIR_ID_DRUPAL \
+    --key-name $KEYPAIR_DRUPAL \
     --profile $PROFILE
 
 [OUTPUT]
-
+{
+    "Groups": [],
+    "Instances": [
+        {
+            "AmiLaunchIndex": 0,
+            "ImageId": "ami-00b3a1b7cfab20134",
+            "InstanceId": "i-02238794a12e931a8",
+            "InstanceType": "t3.micro",
+            "KeyName": "CLD_KEY_DRUPAL_DEVOPSTEAM05",
+            "LaunchTime": "2024-03-07T15:31:07+00:00",
+            "Monitoring": {
+                "State": "disabled"
+            },
+            "Placement": {
+                "AvailabilityZone": "eu-west-3a",
+                "GroupName": "",
+                "Tenancy": "default"
+            },
+            "PrivateDnsName": "ip-10-0-5-9.eu-west-3.compute.internal",
+            "PrivateIpAddress": "10.0.5.9",
+            "ProductCodes": [],
+            "PublicDnsName": "",
+            "State": {
+                "Code": 0,
+                "Name": "pending"
+            },
+            "StateTransitionReason": "",
+            "SubnetId": "subnet-052a4a1a63b6df5f4",
+            "VpcId": "vpc-03d46c285a2af77ba",
+            "Architecture": "x86_64",
+            "BlockDeviceMappings": [],
+            "ClientToken": "3be532f3-f02e-4b1a-9005-da69e0f75c5a",
+            "EbsOptimized": false,
+            "EnaSupport": true,
+            "Hypervisor": "xen",
+            "NetworkInterfaces": [
+                {
+                    "Attachment": {
+                        "AttachTime": "2024-03-07T15:31:07+00:00",
+                        "AttachmentId": "eni-attach-058f1de28c0e16cd8",
+                        "DeleteOnTermination": true,
+                        "DeviceIndex": 0,
+                        "Status": "attaching",
+                        "NetworkCardIndex": 0
+                    },
+                    "Description": "",
+                    "Groups": [
+                        {
+                            "GroupName": "SG-PRIVATE-DRUPAL-DEVOPSTEAM05",
+                            "GroupId": "sg-0867c32d68bac6981"
+                        }
+                    ],
+                    "Ipv6Addresses": [],
+                    "MacAddress": "06:62:2a:d4:e0:63",
+                    "NetworkInterfaceId": "eni-088ce98f99d8eeacb",
+                    "OwnerId": "709024702237",
+                    "PrivateIpAddress": "10.0.5.9",
+                    "PrivateIpAddresses": [
+                        {
+                            "Primary": true,
+                            "PrivateIpAddress": "10.0.5.9"
+                        }
+                    ],
+                    "SourceDestCheck": true,
+                    "Status": "in-use",
+                    "SubnetId": "subnet-052a4a1a63b6df5f4",
+                    "VpcId": "vpc-03d46c285a2af77ba",
+                    "InterfaceType": "interface"
+                }
+            ],
+            "RootDeviceName": "/dev/xvda",
+            "RootDeviceType": "ebs",
+            "SecurityGroups": [
+                {
+                    "GroupName": "SG-PRIVATE-DRUPAL-DEVOPSTEAM05",
+                    "GroupId": "sg-0867c32d68bac6981"
+                }
+            ],
+            "SourceDestCheck": true,
+            "StateReason": {
+                "Code": "pending",
+                "Message": "pending"
+            },
+            "Tags": [
+                {
+                    "Key": "Name",
+                    "Value": "EC2_PRIVATE_DRUPAL_DEVOPSTEAM05"
+                }
+            ],
+            "VirtualizationType": "hvm",
+            "CpuOptions": {
+                "CoreCount": 1,
+                "ThreadsPerCore": 2
+            },
+            "CapacityReservationSpecification": {
+                "CapacityReservationPreference": "open"
+            },
+            "MetadataOptions": {
+                "State": "pending",
+                "HttpTokens": "optional",
+                "HttpPutResponseHopLimit": 1,
+                "HttpEndpoint": "enabled",
+                "HttpProtocolIpv6": "disabled",
+                "InstanceMetadataTags": "disabled"
+            },
+            "EnclaveOptions": {
+                "Enabled": false
+            },
+            "PrivateDnsNameOptions": {
+                "HostnameType": "ip-name",
+                "EnableResourceNameDnsARecord": false,
+                "EnableResourceNameDnsAAAARecord": false
+            },
+            "MaintenanceOptions": {
+                "AutoRecovery": "default"
+            }
+        }
+    ],
+    "OwnerId": "709024702237",
+    "ReservationId": "r-0e7e91d68b81ec0da"
+}
 ```
 
 The ID we received, we saved as a constant in the variables on the top of this document.
