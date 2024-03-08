@@ -50,7 +50,7 @@ Note : already done (team channel -> files/aws)
 |Key|Value|
 |:--|:--|
 |Name|SG-PRIVATE-DRUPAL-DEVOPSTEAM<xx>|
-|Outbound rules|Refer to infra schema|
+|Inbound rules|Refer to infra schema|
 |Outbound rules|Refer to infra schema|
 
 * Update the NAT Security group
@@ -150,7 +150,7 @@ file : /opt/bitnami/apache2/conf/bitnami/bitnami.conf
 ```
 
 ```
-file : /opt/bitnami/apache2/conf/vhosts/
+file : /opt/bitnami/apache2/conf/vhosts/drupal-vhost.conf
 <VirtualHost 127.0.0.1:8080 _default_:8080>
 ```
 
@@ -166,7 +166,7 @@ sudo /opt/bitnami/ctlscript.sh restart apache
 
 ```
 [INPUT]
-curl localhost
+curl 10.0.<XX>.10:8080
 
 [OUTPUT]
 you get the html content of the home page
