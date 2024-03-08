@@ -3,7 +3,9 @@
   instance?
 
 ```
-TODO
+Source: Instance Types creation console
+Smallest: t2.nano with 1vCPUs and 0.5 GB memory (512 MB) 
+Biggest: u-6tb1.112xlarge with 448 vCPUs and 6144 GB memory (bit more than 4 TB)
 ```
 
 * How long did it take for the new instance to get into the _running_
