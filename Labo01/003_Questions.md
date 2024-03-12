@@ -47,7 +47,7 @@ We used the command 'df' (disk free) to get the available space on the disk. For
   instance, record 5 round-trip times.
 
 ```
-TODO
+We tried to ping the ssh server with the following command: ping 15.188.43.46
 ```
 
 * Determine the IP address seen by the operating system in the EC2
@@ -57,5 +57,6 @@ TODO
   with the machine?
 
 ```
-TODO
+The 'ifconfig' command wasn't available. We used 'ip address' instead.
+It is the private IP address (10.0.5.10) we defined for our instance when running it.
 ```
