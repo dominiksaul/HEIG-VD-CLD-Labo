@@ -47,7 +47,19 @@ We used the command 'df' (disk free) to get the available space on the disk. For
   instance, record 5 round-trip times.
 
 ```
-We tried to ping the ssh server with the following command: ping 15.188.43.46
+We tried to ping the ssh server with the following command: ping 15.188.43.46. The SSH server doesn't answer back. That's because its security group only allow inbound SSH and HTTP. By creating a new inbound rule that allow ICMP-Echo request in IPV4. We are able to ping the SSH server.
+
+gdomingo@CI39975 ~ % ping  15.188.43.46
+PING 15.188.43.46 (15.188.43.46): 56 data bytes
+64 bytes from 15.188.43.46: icmp_seq=0 ttl=41 time=184.201 ms
+64 bytes from 15.188.43.46: icmp_seq=1 ttl=41 time=40.781 ms
+64 bytes from 15.188.43.46: icmp_seq=2 ttl=41 time=254.108 ms
+64 bytes from 15.188.43.46: icmp_seq=3 ttl=41 time=54.217 ms
+64 bytes from 15.188.43.46: icmp_seq=4 ttl=41 time=606.677 ms
+^C
+--- 15.188.43.46 ping statistics ---
+6 packets transmitted, 5 packets received, 16.7% packet loss
+round-trip min/avg/max/stddev = 40.781/227.997/606.677/205.547 ms
 ```
 
 * Determine the IP address seen by the operating system in the EC2
