@@ -12,7 +12,7 @@ Biggest: u-6tb1.112xlarge with 448 vCPUs and 6144 GB memory (bit more than 4 TB)
   state?
 
 ```
-TODO
+A few seconds.
 ```
 
 * Using the commands to explore the machine listed earlier, respond to
@@ -21,7 +21,7 @@ TODO
     * What's the difference between time here in Switzerland and the time set on
       the machine?
 ```
-TODO
+We used the command 'date' to get te current date and time on the machine. The machine hash the Universal Date/Time (UTC) configured, which is one hour back from the CET we use.
 ```
 
     * What's the name of the hypervisor?
@@ -31,7 +31,7 @@ TODO
 
     * How much free space does the disk have?
 ```
-TODO
+We used the command 'df' (disk free) to get the available space on the disk. For the root directory '/' around 9.6GB are available in total. From this space are currently 35% used. So there is a free space of around 5.9GB
 ```
 
 
