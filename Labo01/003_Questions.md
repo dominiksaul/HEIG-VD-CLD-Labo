@@ -26,7 +26,14 @@ We used the command 'date' to get te current date and time on the machine. The m
 
     * What's the name of the hypervisor?
 ```
-TODO
+INPUT:
+aws ec2 describe-instances --instance-ids i-022fa1860cf96d05b --profile cld-team05 --query "Reservations[*].Instances[*].Hypervisor"
+OUTPUT:
+[
+    [
+        "xen"
+    ]
+]
 ```
 
     * How much free space does the disk have?
