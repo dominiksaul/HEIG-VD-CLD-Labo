@@ -60,6 +60,8 @@ PING 15.188.43.46 (15.188.43.46): 56 data bytes
 --- 15.188.43.46 ping statistics ---
 6 packets transmitted, 5 packets received, 16.7% packet loss
 round-trip min/avg/max/stddev = 40.781/227.997/606.677/205.547 ms
+
+Source: https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/security-group-rules-reference.html#sg-rules-ping
 ```
 
 * Determine the IP address seen by the operating system in the EC2
@@ -71,4 +73,8 @@ round-trip min/avg/max/stddev = 40.781/227.997/606.677/205.547 ms
 ```
 The 'ifconfig' command wasn't available. We used 'ip address' instead.
 It is the private IP address (10.0.5.10) we defined for our instance when running it.
+The address we used to ping the machine is a public IP address.
+Thanks to the Internet Gateway's NAT capability, we are able to successfully reach the instance from outside the VPC.
+
+Source: https://docs.aws.amazon.com/vpc/latest/userguide/VPC_Internet_Gateway.html
 ```
