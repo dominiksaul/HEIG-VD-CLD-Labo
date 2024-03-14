@@ -20,26 +20,26 @@ A few seconds.
 
     * What's the difference between time here in Switzerland and the time set on
       the machine?
-```
-We used the command 'date' to get te current date and time on the machine. The machine hash the Universal Date/Time (UTC) configured, which is one hour back from the CET we use.
-```
+    ```
+    We used the command 'date' to get te current date and time on the machine. The machine hash the Universal Date/Time (UTC) configured, which is one hour back from the CET we use.
+    ```
 
     * What's the name of the hypervisor?
-```
-INPUT:
-aws ec2 describe-instances --instance-ids i-022fa1860cf96d05b --profile cld-team05 --query "Reservations[*].Instances[*].Hypervisor"
-OUTPUT:
-[
+    ```
+    INPUT:
+    aws ec2 describe-instances --instance-ids i-022fa1860cf96d05b --profile cld-team05 --query "Reservations[*].Instances[*].Hypervisor"
+    OUTPUT:
     [
-        "xen"
+        [
+            "xen"
+        ]
     ]
-]
-```
+    ```
 
     * How much free space does the disk have?
-```
-We used the command 'df' (disk free) to get the available space on the disk. For the root directory '/' around 9.6GB are available in total. From this space are currently 35% used. So there is a free space of around 5.9GB
-```
+    ```
+    We used the command 'df' (disk free) to get the available space on the disk. For the root directory '/' around 9.6GB are available in total. From this space are currently 35% used. So there is a free space of around 5.9GB
+    ```
 
 
 * Try to ping the instance ssh srv from your local machine. What do you see?
