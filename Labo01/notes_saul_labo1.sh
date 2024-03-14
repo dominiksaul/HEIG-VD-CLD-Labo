@@ -41,3 +41,5 @@ aws ec2 run-instances \
 --subnet-id <subnet-id> \
 --security-group-ids <security-group-id> <security-group-id> … \
 --key-name <ec2-key-pair-name>
+
+# Create
