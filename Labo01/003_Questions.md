@@ -74,7 +74,5 @@ Source: https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/security-group-rules
 The 'ifconfig' command wasn't available. We used 'ip address' instead.
 It is the private IP address (10.0.5.10) we defined for our instance when running it.
 The address we used to ping the machine is a public IP address.
-Thanks to the Internet Gateway's NAT capability, we are able to successfully reach the instance from outside the VPC.
-
-Source: https://docs.aws.amazon.com/vpc/latest/userguide/VPC_Internet_Gateway.html
+Since there is a NAT service instance in the DMZ, we are able to successfully reach the instance from outside the VPC.
 ```
