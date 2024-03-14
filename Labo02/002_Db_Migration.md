@@ -17,7 +17,7 @@ more /home/bitnami/bitnami_credentials
 Welcome to the Bitnami package for Drupal
 
 ******************************************************************************
-The default username and password is 'user' and 'dT:XPfs2/bqE'.
+The default username and password is 'user' and '***********'.
 ******************************************************************************
 
 You can also use this password to access the databases and any other component t
@@ -31,10 +31,21 @@ Please refer to https://docs.bitnami.com/ for more details.
 ```bash
 [INPUT]
 //add string connection
-
+mariadb --user=root --password=*************
 show databases;
 
 [OUTPUT]
++--------------------+
+| Database           |
++--------------------+
+| bitnami_drupal     |
+| information_schema |
+| mysql              |
+| performance_schema |
+| sys                |
+| test               |
++--------------------+
+6 rows in set (0.002 sec)
 ```
 
 ### [Dump Drupal DataBases](https://mariadb.com/kb/en/mariadb-dump/)
