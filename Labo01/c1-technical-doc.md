@@ -9,6 +9,9 @@ ssh devopsteam05@15.188.43.46 -i ~/.ssh/CLD_KEY_DMZ_DEVOPSTEAM05.pem
 ```bash
 ssh devopsteam05@15.188.43.46 -i ~/.ssh/CLD_KEY_DMZ_DEVOPSTEAM05.pem -L 2223:10.0.5.10:22
 ssh bitnami@localhost -p 2223 -i ~/.ssh/CLD_KEY_DRUPAL_DEVOPSTEAM05.pem
+
+ssh devopsteam05@15.188.43.46 -i ~/.ssh/CLD_KEY_DMZ_DEVOPSTEAM05.pem -L 2224:10.0.5.140:22
+ssh bitnami@localhost -p 2224 -i ~/.ssh/CLD_KEY_DRUPAL_DEVOPSTEAM05.pem
 ```
 
 ## Réalisation
