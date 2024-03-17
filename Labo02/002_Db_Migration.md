@@ -52,6 +52,7 @@ show databases;
 
 ```bash
 [INPUT]
+drush sql-dump > dbDump.sql
 
 [OUTPUT]
 ```
@@ -69,7 +70,9 @@ Note : you can do this from the Drupal Instance. Do not forget to set the "-h" p
 
 ```sql
 [INPUT]
-mysql -h <rds-end-point> -u <rds_admin_user> -p <db_target> < <pathToDumpFileToImport>.sql
+// help: mysql -h <rds-end-point> -u <rds_admin_user> -p <db_target> < <pathToDumpFileToImport>.sql
+mysql -h dbi-devopsteam05.cshki92s4w5p.eu-west-3.rds.amazonaws.com -u admin -p bitnami_drupal < dbDump.sql
+DEVOPSTEAM05!
 
 [OUTPUT]
 ```
@@ -83,7 +86,7 @@ mysql -h <rds-end-point> -u <rds_admin_user> -p <db_target> < <pathToDumpFileToI
 [OUTPUT]
 //at the end of the file you will find connection string parameters
 //username = bn_drupal
-//password = XXXXXXX
+//password = 84H7WECZuwA5maw2$G@@
 ```
 
 ### Replace the current host with the RDS FQDN
@@ -93,7 +96,7 @@ mysql -h <rds-end-point> -u <rds_admin_user> -p <db_target> < <pathToDumpFileToI
 
 $databases['default']['default'] = array (
    [...] 
-  'host' => 'dbi-devopsteam99.cshki92s4w5p.eu-west-3.rds.amazonaws.com',
+  'host' => 'dbi-devopsteam05.cshki92s4w5p.eu-west-3.rds.amazonaws.com',
    [...] 
 );
 ```
@@ -107,17 +110,20 @@ Note : only calls from both private subnets must be approved.
 
 ```sql
 [INPUT]
-CREATE USER bn_drupal@'10.0.[XX].0/[Subnet Mask - A]]' IDENTIFIED BY '<Drupal password>';
+// CREATE USER bn_drupal@'10.0.[XX].0/[Subnet Mask - A]]' IDENTIFIED BY '<Drupal password>';
+CREATE USER bn_drupal@'10.0.5.0/28' IDENTIFIED BY '84H7WECZuwA5maw2$G@@';
 
-GRANT ALL PRIVILEGES ON bitnami_drupal.* TO '<yourNewUser>';
+// GRANT ALL PRIVILEGES ON bitnami_drupal.* TO '<yourNewUser>';
+GRANT ALL PRIVILEGES ON bitnami_drupal.* TO bn_drupal@'10.0.5.0/28';
 
-//DO NOT FOREGT TO FLUSH PRIVILEGES
+// DO NOT FOREGT TO FLUSH PRIVILEGES
 ```
 
 ```sql
 //validation
 [INPUT]
-SHOW GRANTS for 'bn_drupal'@'10.0.[XX].0/[yourMask]]';
+// SHOW GRANTS for 'bn_drupal'@'10.0.[XX].0/[yourMask]]';
+SHOW GRANTS for 'bn_drupal'@'10.0.5.0/28';
 
 [OUTPUT]
 +----------------------------------------------------------------------------------------------------------------------------------+
@@ -132,7 +138,9 @@ SHOW GRANTS for 'bn_drupal'@'10.0.[XX].0/[yourMask]]';
 
 ```sql
 [INPUT]
-mysql -h dbi-devopsteam[XX].xxxxxxxx.eu-west-3.rds.amazonaws.com -u bn_drupal -p
+// mysql -h dbi-devopsteam[XX].xxxxxxxx.eu-west-3.rds.amazonaws.com -u bn_drupal -p
+mysql -h dbi-devopsteam05.cshki92s4w5p.eu-west-3.rds.amazonaws.com -u bn_drupal -p
+84H7WECZuwA5maw2$G@@
 
 [INPUT]
 show databases;
