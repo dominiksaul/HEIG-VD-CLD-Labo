@@ -13,15 +13,15 @@ In this task you will migrate the Drupal database to the new RDS database instan
 //help : path /home/bitnami/bitnami_credentials
 //Inside the drupal machine
 more /home/bitnami/bitnami_credentials
+
 [OUTPUT]
 Welcome to the Bitnami package for Drupal
 
 ******************************************************************************
-The default username and password is 'user' and '***********'.
+The default username and password is 'user' and 'dT:XPfs2/bqE'.
 ******************************************************************************
 
-You can also use this password to access the databases and any other component t
-he stack includes.
+You can also use this password to access the databases and any other component the stack includes.
 
 Please refer to https://docs.bitnami.com/ for more details.
 ```
@@ -31,7 +31,7 @@ Please refer to https://docs.bitnami.com/ for more details.
 ```bash
 [INPUT]
 //add string connection
-mariadb --user=root --password=*************
+mariadb --user=root --password=dT:XPfs2/bqE
 show databases;
 
 [OUTPUT]
@@ -63,7 +63,8 @@ drush sql-dump > dbDump.sql
 
 ```sql
 // connection string:
-// mysql -h dbi-devopsteam05.cshki92s4w5p.eu-west-3.rds.amazonaws.com -u admin -p
+// mysql -h dbi-devopsteam05.cshki92s4w5p.eu-west-3.rds.amazonaws.com -u admin --password=DEVOPSTEAM05!
+
 [INPUT]
 CREATE DATABASE bitnami_drupal;
 ```
@@ -75,27 +76,27 @@ Note : you can do this from the Drupal Instance. Do not forget to set the "-h" p
 ```sql
 [INPUT]
 // help: mysql -h <rds-end-point> -u <rds_admin_user> -p <db_target> < <pathToDumpFileToImport>.sql
-mysql -h dbi-devopsteam05.cshki92s4w5p.eu-west-3.rds.amazonaws.com -u admin -p bitnami_drupal < dbDump.sql
-DEVOPSTEAM05!
-
-[OUTPUT]
+mysql -h dbi-devopsteam05.cshki92s4w5p.eu-west-3.rds.amazonaws.com -u admin --password=DEVOPSTEAM05! bitnami_drupal < dbDump.sql
 ```
 
 ### [Get the current Drupal connection string parameters](https://www.drupal.org/docs/8/api/database-api/database-configuration)
 
 ```bash
 [INPUT]
-//help : same settings.php as before
+// help : same settings.php as before
+more /bitnami/drupal/sites/default/settings.php
 
 [OUTPUT]
-//at the end of the file you will find connection string parameters
-//username = bn_drupal
-//password = 84H7WECZuwA5maw2$G@@
+// at the end of the file you will find connection string parameters
+username = bn_drupal
+password = 20e91a2b1ef64b0912e6044d5fd4e8d3b62738609df7229ffb58e170793e688d
 ```
 
 ### Replace the current host with the RDS FQDN
 
-```
+```bash
+[INPUT]
+sudo nano /bitnami/drupal/sites/default/settings.php
 //settings.php
 
 $databases['default']['default'] = array (
@@ -113,29 +114,33 @@ Note : only calls from both private subnets must be approved.
 * [Network Mask](https://cric.grenoble.cnrs.fr/Administrateurs/Outils/CalculMasque/)
 
 ```sql
+// connection string:
+// mysql -h dbi-devopsteam05.cshki92s4w5p.eu-west-3.rds.amazonaws.com -u admin --password=DEVOPSTEAM05!
 [INPUT]
 // CREATE USER bn_drupal@'10.0.[XX].0/[Subnet Mask - A]]' IDENTIFIED BY '<Drupal password>';
-CREATE USER bn_drupal@'10.0.5.0/28' IDENTIFIED BY '84H7WECZuwA5maw2$G@@';
+CREATE USER bn_drupal@'10.0.5.0/255.255.255.240' IDENTIFIED BY '20e91a2b1ef64b0912e6044d5fd4e8d3b62738609df7229ffb58e170793e688d';
 
 // GRANT ALL PRIVILEGES ON bitnami_drupal.* TO '<yourNewUser>';
-GRANT ALL PRIVILEGES ON bitnami_drupal.* TO bn_drupal@'10.0.5.0/28';
+GRANT ALL PRIVILEGES ON bitnami_drupal.* TO bn_drupal@'10.0.5.0/255.255.255.240';
 
 // DO NOT FOREGT TO FLUSH PRIVILEGES
+FLUSH PRIVILEGES;
 ```
 
 ```sql
 //validation
 [INPUT]
 // SHOW GRANTS for 'bn_drupal'@'10.0.[XX].0/[yourMask]]';
-SHOW GRANTS for 'bn_drupal'@'10.0.5.0/28';
+SHOW GRANTS for 'bn_drupal'@'10.0.5.0/255.255.255.240';
 
 [OUTPUT]
-+----------------------------------------------------------------------------------------------------------------------------------+
-| Grants for <yourNewUser>                                                                                                         |
-+----------------------------------------------------------------------------------------------------------------------------------+
-| GRANT USAGE ON *.* TO <yourNewUser> IDENTIFIED BY PASSWORD 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX'                           |
-| GRANT ALL PRIVILEGES ON `bitnami_drupal`.* TO <yourNewUser>                                                                      |
-+----------------------------------------------------------------------------------------------------------------------------------+
++---------------------------------------------------------------------------------------------------------------------------------+
+| Grants for bn_drupal@10.0.5.0/255.255.255.240                                                                                   |
++---------------------------------------------------------------------------------------------------------------------------------+
+| GRANT USAGE ON *.* TO `bn_drupal`@`10.0.5.0/255.255.255.240` IDENTIFIED BY PASSWORD '*9C2E58CAAD3FD52E0FEF8C568462BD378AAFD802' |
+| GRANT ALL PRIVILEGES ON `bitnami_drupal`.* TO `bn_drupal`@`10.0.5.0/255.255.255.240`                                            |
++---------------------------------------------------------------------------------------------------------------------------------+
+2 rows in set (0.000 sec)
 ```
 
 ### Validate access (on the drupal instance)
@@ -143,11 +148,10 @@ SHOW GRANTS for 'bn_drupal'@'10.0.5.0/28';
 ```sql
 [INPUT]
 // mysql -h dbi-devopsteam[XX].xxxxxxxx.eu-west-3.rds.amazonaws.com -u bn_drupal -p
-mysql -h dbi-devopsteam05.cshki92s4w5p.eu-west-3.rds.amazonaws.com -u bn_drupal -p
-84H7WECZuwA5maw2$G@@
+mysql -h dbi-devopsteam05.cshki92s4w5p.eu-west-3.rds.amazonaws.com -u bn_drupal --password=20e91a2b1ef64b0912e6044d5fd4e8d3b62738609df7229ffb58e170793e688d
 
 [INPUT]
-show databases;
+SHOW DATABASES;
 
 [OUTPUT]
 +--------------------+
@@ -160,3 +164,20 @@ show databases;
 ```
 
 * Repeat the procedure to enable the instance on subnet 2 to also talk to your RDS instance.
+```sql
+// mysql -h dbi-devopsteam05.cshki92s4w5p.eu-west-3.rds.amazonaws.com -u admin --password=DEVOPSTEAM05!
+
+[INPUT]
+CREATE USER bn_drupal@'10.0.5.128/255.255.255.240' IDENTIFIED BY '20e91a2b1ef64b0912e6044d5fd4e8d3b62738609df7229ffb58e170793e688d';
+GRANT ALL PRIVILEGES ON bitnami_drupal.* TO bn_drupal@'10.0.5.128/255.255.255.240';
+SHOW GRANTS for 'bn_drupal'@'10.0.5.128/255.255.255.240';
+
+[OUTPUT]
++-----------------------------------------------------------------------------------------------------------------------------------+
+| Grants for bn_drupal@10.0.5.128/255.255.255.240                                                                                   |
++-----------------------------------------------------------------------------------------------------------------------------------+
+| GRANT USAGE ON *.* TO `bn_drupal`@`10.0.5.128/255.255.255.240` IDENTIFIED BY PASSWORD '*9C2E58CAAD3FD52E0FEF8C568462BD378AAFD802' |
+| GRANT ALL PRIVILEGES ON `bitnami_drupal`.* TO `bn_drupal`@`10.0.5.128/255.255.255.240`                                            |
++-----------------------------------------------------------------------------------------------------------------------------------+
+2 rows in set (0.001 sec)
+```
