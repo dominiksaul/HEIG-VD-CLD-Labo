@@ -127,9 +127,8 @@ aws elbv2 create-target-group \
     --target-type instance \
     --vpc-id $VPC_ID \
     --profile $PROFILE
-// Health check timeout is by default 5 seconds by default for HTTP Target groups
-// Unhealthy threshold is already 2 by default
-// Success code are already by default 200
+// The required parameters, that are already by default like this, we didnt respecified in the command
+// In the output below we can see that theyre configured correctly
 
 // Registers intances to target groups
 aws elbv2 register-targets \
@@ -278,18 +277,20 @@ aws elbv2 create-load-balancer \
 
 ```bash
 [INPUT]
-//Via ClI ?
-aws elb describe-load-balancers \
---load-balancer-name LB.name \
---query "LoadBalancerDescriptions[*].DNSName" \
+aws elbv2 describe-load-balancers \
+--load-balancer-arns $LOADBALANCER_ARN  \
+--query "LoadBalancers[*].{DNSname: DNSName}" \ 
 --profile $PROFILE \
 --output table
 
-// Connect to the LD and launch the following command
-hostname --fqdn
-
 [OUTPUT]
-
+---------------------------------------------------------------------
+|                       DescribeLoadBalancers                       |
++-------------------------------------------------------------------+
+|                              DNSname                              |
++-------------------------------------------------------------------+
+|  internal-ELB-DEVOPSTEAM05-995522892.eu-west-3.elb.amazonaws.com  |
++-------------------------------------------------------------------+
 ```
 
 * Get the ELB deployment status
@@ -304,16 +305,32 @@ Note : In the EC2 console select the Target Group. In the
 
 ```bash
 //connection string updated
+ssh devopsteam05@15.188.43.46 -i ~/.ssh/CLD_KEY_DMZ_DEVOPSTEAM05.pem -L 8887:$LOADBALANCER_DNS_NAME:8080
 ```
 
 * Test your application through your ssh tunneling
 
 ```bash
 [INPUT]
-curl localhost:[local port forwarded]
+curl localhost:8887
 
 [OUTPUT]
+<!DOCTYPE html>
+<html lang="en" dir="ltr" style="--color--primary-hue:202;--color--primary-saturation:79%;--color--primary-lightness:50">
+  <head>
+    <meta charset="utf-8" />
+<meta name="Generator" content="Drupal 10 (https://www.drupal.org)" />
+<meta name="MobileOptimized" content="width" />
+<meta name="HandheldFriendly" content="true" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link rel="icon" href="/core/themes/olivero/favicon.ico" type="image/vnd.microsoft.icon" />
+<link rel="alternate" type="application/rss+xml" title="" href="http://localhost:8080/rss.xml" />
+<link rel="alternate" type="application/rss+xml" title="" href="http://localhost/rss.xml" />
 
+    <title>Welcome! | My blog</title>
+    <link rel="stylesheet" media="all" href="/sites/default/files/css/css_6eSgGYdKFcPwkbV-DyTDqzQg680jCzOh2IGM7g7RQqs.css?delta=0&amp;language=en&amp;theme=olivero&amp;include=eJxdjMEKAyEMBX9ord8U9dUNzZqSuIp_X-jBQi9zmIHx5R1XTOQ4VHjANFbRRBK8L-FWt37rhKGEtEISza8dnkA5BmN6_PJxabnl92s0uFJnbcGRtRWytaODLJ9hcsG_a2Sm8wMVPz8c" />
+<link rel="stylesheet" media="all" href="/sites/default/files/css/css_d3A_sUoRHUzPDZtSPHkhbFrt_BO-POIAj-4UrTmR6AY.css?delta=1&amp;language=en&amp;theme=olivero&amp;include=eJxdjMEKAyEMBX9ord8U9dUNzZqSuIp_X-jBQi9zmIHx5R1XTOQ4VHjANFbRRBK8L-FWt37rhKGEtEISza8dnkA5BmN6_PJxabnl92s0uFJnbcGRtRWytaODLJ9hcsG_a2Sm8wMVPz8c" />
+[...]
 ```
 
 #### Questions - Analysis
@@ -323,7 +340,18 @@ curl localhost:[local port forwarded]
   the DNS name and the resolved IP Address(es) into the report.
 
 ```
-//TODO
+nslookup internal-ELB-DEVOPSTEAM05-995522892.eu-west-3.elb.amazonaws.com
+Server:         193.134.218.75
+Address:        193.134.218.75#53
+
+Non-authoritative answer:
+Name:   internal-ELB-DEVOPSTEAM05-995522892.eu-west-3.elb.amazonaws.com
+Address: 10.0.5.136
+Name:   internal-ELB-DEVOPSTEAM05-995522892.eu-west-3.elb.amazonaws.com
+Address: 10.0.5.8
+
+When we do a nslookup from our local machines for the FQND of the Loadbalancer we receive two local IP-Addresses. (10.0.5.8 and 10.0.5.136)
+Those local ip-addresses are published by the DNS servers of AWS and this helps us to establish the SSH Tunnel directly with the FQDN name.
 ```
 
 * From your Drupal instance, identify the ip from which requests are sent by the Load Balancer.
@@ -331,7 +359,7 @@ curl localhost:[local port forwarded]
 Help : execute `tcpdump port 8080`
 
 ```
-//TODO
+The load balancer sends the requests from the ip addresses we found with the nslookup. (10.0.5.8 and 10.0.5.136)
 ```
 
 * In the Apache access log identify the health check accesses from the
@@ -339,4 +367,14 @@ Help : execute `tcpdump port 8080`
 
 ```
 //TODO
+cat ~/stack/apache2/logs/access_log
+10.0.5.8 - - [21/Mar/2024:17:00:22 +0000] "GET / HTTP/1.1" 200 5152
+10.0.5.136 - - [21/Mar/2024:17:00:28 +0000] "GET / HTTP/1.1" 200 5152
+10.0.5.8 - - [21/Mar/2024:17:00:32 +0000] "GET / HTTP/1.1" 200 5152
+10.0.5.136 - - [21/Mar/2024:17:00:38 +0000] "GET / HTTP/1.1" 200 5152
+10.0.5.8 - - [21/Mar/2024:17:00:42 +0000] "GET / HTTP/1.1" 200 5152
+10.0.5.136 - - [21/Mar/2024:17:00:48 +0000] "GET / HTTP/1.1" 200 5152
+10.0.5.8 - - [21/Mar/2024:17:00:52 +0000] "GET / HTTP/1.1" 200 5152
+10.0.5.136 - - [21/Mar/2024:17:00:58 +0000] "GET / HTTP/1.1" 200 5152
+10.0.5.8 - - [21/Mar/2024:17:01:02 +0000] "GET / HTTP/1.1" 200 5152
 ```
