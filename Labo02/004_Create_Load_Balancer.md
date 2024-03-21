@@ -87,8 +87,17 @@ field not mentioned at its default value):
 
 ```bash
 [INPUT]
+// Create application Load Balancers
+aws elbv2 create-load-balancer \
+    --name ELB-${GROUP_NAME}\ \
+    --scheme internal \
+    --subnets $SUBNET_A_ID $SUBNET_B_ID
 
-
+// Create and add listener to load balancer
+ aws elbv2 create-listener \
+    --load-balancer-arn TODO
+    --protocol HTTP
+    --port 8080
 [OUTPUT]
 
 ```
