@@ -43,10 +43,23 @@ instances.
 |Interval|10 seconds|
 |Success codes|200|
 
+[Source]([https://docs.aws.amazon.com/elasticloadbalancing/latest/application/create-application-load-balancer.html](https://awscli.amazonaws.com/v2/documentation/api/2.1.29/reference/elbv2/create-target-group.html))
 ```bash
 [INPUT]
-
-
+aws elbv2 create-target-group \
+    --name TG-${GROUP_NAME} \
+    --protocol HTTP \
+    --port 8080 \
+    --health-check-protocol HTTP \
+    --health-check-enabled \
+    --health-check-interval-seconds 10 \
+    --healthy-threshold-count 2 \
+    --unhealthy-threshold-count 2 \
+    --target-type instance \
+    --vpc-id $VPC_ID
+// Health check timeout is by default 5 seconds by default for HTTP Target groups
+// Unhealthy threshold is already 2 by default
+// Success code are already by default 200
 [OUTPUT]
 
 ```
