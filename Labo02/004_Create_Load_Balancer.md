@@ -106,7 +106,8 @@ aws elbv2 create-load-balancer \
 
 ```bash
 [INPUT]
-
+// Connect to the LD and launch the following command
+hostname --fqdn
 
 [OUTPUT]
 
