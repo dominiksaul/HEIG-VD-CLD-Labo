@@ -18,7 +18,21 @@ instances.
 
 ```bash
 [INPUT]
+// Create security groups
+aws ec2 create-security-group \
+    --vpc-id $VPC_ID \
+    --group-name SG-DEVOPSTEAM${GROUP_NAME}-LD \
+    --description ${GROUP_NAME}-LD \
+    --tag-specifications "ResourceType=security-group, Tags=[{Key=Name,Value=SG-DEVOPSTEAM-${GROUP_NAME}-LD}]" \
+    --profile $PROFILE
 
+// Create rule 
+aws ec2 authorize-security-group-ingress \
+    --group-id TOADD \
+    --protocol tcp \
+    --port 8080 \
+    --cidr 0.0.0.0/0 \
+    --profile $PROFILE
 
 [OUTPUT]
 
