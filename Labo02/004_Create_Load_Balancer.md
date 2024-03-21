@@ -106,6 +106,12 @@ aws elbv2 create-load-balancer \
 
 ```bash
 [INPUT]
+//Via ClI ?
+aws elb describe-load-balancers \
+--load-balancer-name LB.name \
+--query LoadBalancerDescriptions[*].DNSName \
+--output table
+
 // Connect to the LD and launch the following command
 hostname --fqdn
 
