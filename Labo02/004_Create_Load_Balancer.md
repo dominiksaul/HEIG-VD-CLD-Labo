@@ -56,7 +56,8 @@ aws elbv2 create-target-group \
     --healthy-threshold-count 2 \
     --unhealthy-threshold-count 2 \
     --target-type instance \
-    --vpc-id $VPC_ID
+    --vpc-id $VPC_ID \
+    --profile $PROFILE
 // Health check timeout is by default 5 seconds by default for HTTP Target groups
 // Unhealthy threshold is already 2 by default
 // Success code are already by default 200
@@ -89,15 +90,17 @@ field not mentioned at its default value):
 [INPUT]
 // Create application Load Balancers
 aws elbv2 create-load-balancer \
-    --name ELB-${GROUP_NAME}\ \
+    --name ELB-${GROUP_NAME} \
     --scheme internal \
-    --subnets $SUBNET_A_ID $SUBNET_B_ID
+    --subnets $SUBNET_A_ID $SUBNET_B_ID \
+    --profile $PROFILE
 
 // Create and add listener to load balancer
  aws elbv2 create-listener \
-    --load-balancer-arn TODO
-    --protocol HTTP
-    --port 8080
+    --load-balancer-arn TODO \
+    --protocol HTTP \
+    --port 8080 \
+    --profile $PROFILE
 [OUTPUT]
 
 ```
