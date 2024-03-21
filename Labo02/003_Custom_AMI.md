@@ -41,12 +41,26 @@ aws ec2 create-image \
 * Restart Drupal Instance in Az1
 ```bash
 [INPUT]
-aws ec2 start-instance \
+aws ec2 start-instances \
     --instance-id $INSTANCE_A_ID \
     --profile $PROFILE
 
 [OUTPUT]
-
+{
+    "StartingInstances": [
+        {
+            "CurrentState": {
+                "Code": 0,
+                "Name": "pending"
+            },
+            "InstanceId": "i-0bff093f394535638",
+            "PreviousState": {
+                "Code": 80,
+                "Name": "stopped"
+            }
+        }
+    ]
+}
 ```
 
 

@@ -55,11 +55,15 @@ show databases;
 drush sql-dump > dbDump.sql
 
 [OUTPUT]
+// no output
+// but we can check the creation of the file with the command ls
 ```
 
 ### Create the new Data base on RDS
 
 ```sql
+// connection string:
+// mysql -h dbi-devopsteam05.cshki92s4w5p.eu-west-3.rds.amazonaws.com -u admin -p
 [INPUT]
 CREATE DATABASE bitnami_drupal;
 ```
