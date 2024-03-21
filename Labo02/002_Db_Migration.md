@@ -63,7 +63,7 @@ drush sql-dump > dbDump.sql
 
 ```sql
 // connection string:
-// mysql -h dbi-devopsteam05.cshki92s4w5p.eu-west-3.rds.amazonaws.com -u admin --password=DEVOPSTEAM05!
+// mysql -h $RDS_DB_DNS_NAME -u $RDS_DB_ADMIN_USER --password=$RDS_DB_ADMIN_PW
 
 [INPUT]
 CREATE DATABASE bitnami_drupal;
@@ -76,7 +76,7 @@ Note : you can do this from the Drupal Instance. Do not forget to set the "-h" p
 ```sql
 [INPUT]
 // help: mysql -h <rds-end-point> -u <rds_admin_user> -p <db_target> < <pathToDumpFileToImport>.sql
-mysql -h dbi-devopsteam05.cshki92s4w5p.eu-west-3.rds.amazonaws.com -u admin --password=DEVOPSTEAM05! bitnami_drupal < dbDump.sql
+mysql -h $RDS_DB_DNS_NAME -u $RDS_DB_ADMIN_USER --password=$RDS_DB_ADMIN_PW bitnami_drupal < dbDump.sql
 ```
 
 ### [Get the current Drupal connection string parameters](https://www.drupal.org/docs/8/api/database-api/database-configuration)
@@ -101,7 +101,7 @@ sudo nano /bitnami/drupal/sites/default/settings.php
 
 $databases['default']['default'] = array (
    [...] 
-  'host' => 'dbi-devopsteam05.cshki92s4w5p.eu-west-3.rds.amazonaws.com',
+  'host' => '$RDS_DB_DNS_NAME',
    [...] 
 );
 ```
@@ -115,7 +115,7 @@ Note : only calls from both private subnets must be approved.
 
 ```sql
 // connection string:
-// mysql -h dbi-devopsteam05.cshki92s4w5p.eu-west-3.rds.amazonaws.com -u admin --password=DEVOPSTEAM05!
+// mysql -h $RDS_DB_DNS_NAME -u $RDS_DB_ADMIN_USER --password=$RDS_DB_ADMIN_PW
 [INPUT]
 // CREATE USER bn_drupal@'10.0.[XX].0/[Subnet Mask - A]]' IDENTIFIED BY '<Drupal password>';
 CREATE USER bn_drupal@'10.0.5.0/255.255.255.240' IDENTIFIED BY '20e91a2b1ef64b0912e6044d5fd4e8d3b62738609df7229ffb58e170793e688d';
@@ -148,7 +148,7 @@ SHOW GRANTS for 'bn_drupal'@'10.0.5.0/255.255.255.240';
 ```sql
 [INPUT]
 // mysql -h dbi-devopsteam[XX].xxxxxxxx.eu-west-3.rds.amazonaws.com -u bn_drupal -p
-mysql -h dbi-devopsteam05.cshki92s4w5p.eu-west-3.rds.amazonaws.com -u bn_drupal --password=20e91a2b1ef64b0912e6044d5fd4e8d3b62738609df7229ffb58e170793e688d
+mysql -h $RDS_DB_DNS_NAME -u $RDS_DB_DRUPAL_USER --password=$RDS_DB_DRUPAL_PW
 
 [INPUT]
 SHOW DATABASES;
@@ -165,7 +165,7 @@ SHOW DATABASES;
 
 * Repeat the procedure to enable the instance on subnet 2 to also talk to your RDS instance.
 ```sql
-// mysql -h dbi-devopsteam05.cshki92s4w5p.eu-west-3.rds.amazonaws.com -u admin --password=DEVOPSTEAM05!
+// mysql -h $RDS_DB_DNS_NAME -u $RDS_DB_ADMIN_USER --password=$RDS_DB_ADMIN_PW
 
 [INPUT]
 CREATE USER bn_drupal@'10.0.5.128/255.255.255.240' IDENTIFIED BY '20e91a2b1ef64b0912e6044d5fd4e8d3b62738609df7229ffb58e170793e688d';

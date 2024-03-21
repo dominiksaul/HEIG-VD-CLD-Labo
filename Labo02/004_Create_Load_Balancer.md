@@ -26,16 +26,70 @@ aws ec2 create-security-group \
     --tag-specifications "ResourceType=security-group, Tags=[{Key=Name,Value=SG-DEVOPSTEAM-${GROUP_NAME}-LD}]" \
     --profile $PROFILE
 
-// Create rule 
+// Create inbound rule for load balancer
 aws ec2 authorize-security-group-ingress \
-    --group-id TOADD \
+    --group-id $SECURITY_GROUP_LD_ID \
     --protocol tcp \
     --port 8080 \
-    --cidr 0.0.0.0/0 \
+    --cidr $CIDRBLOCK_VPC \
     --profile $PROFILE
-
+    
+// Create inbound rule for instance 
+aws ec2 authorize-security-group-ingress \
+    --group-id $SECURITY_GROUP_DMZ_ID \
+    --protocol tcp \
+    --port 8080 \
+    --source-group $SECURITY_GROUP_LD_ID \
+    --profile $PROFILE
+    
 [OUTPUT]
+// Create security group
+{
+    "GroupId": "sg-0fdbe692da3bc47eb",
+    "Tags": [
+        {
+            "Key": "Name",
+            "Value": "SG-DEVOPSTEAM-DEVOPSTEAM05-LD"
+        }
+    ]
+}
 
+//Create rule for load balancer
+{
+    "Return": true,
+    "SecurityGroupRules": [
+        {
+            "SecurityGroupRuleId": "sgr-0f8419a490a05935d",
+            "GroupId": "sg-0fdbe692da3bc47eb",
+            "GroupOwnerId": "709024702237",
+            "IsEgress": false,
+            "IpProtocol": "tcp",
+            "FromPort": 8080,
+            "ToPort": 8080,
+            "CidrIpv4": "10.0.0.0/24"
+        }
+    ]
+}
+
+//Create rule for drupal instances
+{
+    "Return": true,
+    "SecurityGroupRules": [
+        {
+            "SecurityGroupRuleId": "sgr-0fdabf4b36a063656",
+            "GroupId": "sg-0867c32d68bac6981",
+            "GroupOwnerId": "709024702237",
+            "IsEgress": false,
+            "IpProtocol": "tcp",
+            "FromPort": 8080,
+            "ToPort": 8080,
+            "ReferencedGroupInfo": {
+                "GroupId": "sg-0fdbe692da3bc47eb",
+                "UserId": "709024702237"
+            }
+        }
+    ]
+}
 ```
 
 * Create the Target Group
@@ -60,6 +114,7 @@ aws ec2 authorize-security-group-ingress \
 [Source]([https://docs.aws.amazon.com/elasticloadbalancing/latest/application/create-application-load-balancer.html](https://awscli.amazonaws.com/v2/documentation/api/2.1.29/reference/elbv2/create-target-group.html))
 ```bash
 [INPUT]
+//Create target group
 aws elbv2 create-target-group \
     --name TG-${GROUP_NAME} \
     --protocol HTTP \
@@ -75,8 +130,43 @@ aws elbv2 create-target-group \
 // Health check timeout is by default 5 seconds by default for HTTP Target groups
 // Unhealthy threshold is already 2 by default
 // Success code are already by default 200
-[OUTPUT]
 
+// Registers intances to target groups
+aws elbv2 register-targets \
+    --target-group-arn $TARGETGROUP_ARN \
+    --targets Id=$INSTANCE_A_ID Id=$INSTANCE_B_ID \
+    --profile $PROFILE
+
+[OUTPUT]
+// Create target group
+{
+    "TargetGroups": [
+        {
+            "TargetGroupArn": "arn:aws:elasticloadbalancing:eu-west-3:709024702237:targetgroup/TG-DEVOPSTEAM05/90c93af8c3baa5b3",
+            "TargetGroupName": "TG-DEVOPSTEAM05",
+            "Protocol": "HTTP",
+            "Port": 8080,
+            "VpcId": "vpc-03d46c285a2af77ba",
+            "HealthCheckProtocol": "HTTP",
+            "HealthCheckPort": "traffic-port",
+            "HealthCheckEnabled": true,
+            "HealthCheckIntervalSeconds": 10,
+            "HealthCheckTimeoutSeconds": 5,
+            "HealthyThresholdCount": 2,
+            "UnhealthyThresholdCount": 2,
+            "HealthCheckPath": "/",
+            "Matcher": {
+                "HttpCode": "200"
+            },
+            "TargetType": "instance",
+            "ProtocolVersion": "HTTP1",
+            "IpAddressType": "ipv4"
+        }
+    ]
+}
+
+// Register targets to the target group
+//No output if successful
 ```
 
 
@@ -106,17 +196,82 @@ field not mentioned at its default value):
 aws elbv2 create-load-balancer \
     --name ELB-${GROUP_NAME} \
     --scheme internal \
+    --ip-address-type ipv4 \
     --subnets $SUBNET_A_ID $SUBNET_B_ID \
+    --security-groups $SECURITY_GROUP_LD_ID\
     --profile $PROFILE
 
 // Create and add listener to load balancer
  aws elbv2 create-listener \
-    --load-balancer-arn TODO \
+    --load-balancer-arn $LOADBALANCER_ARN \
     --protocol HTTP \
     --port 8080 \
+    --default-actions Type=forward,TargetGroupArn=$TARGETGROUP_ARN \
     --profile $PROFILE
 [OUTPUT]
+// Create application load balancers
+{
+    "LoadBalancers": [
+        {
+            "LoadBalancerArn": "arn:aws:elasticloadbalancing:eu-west-3:709024702237:loadbalancer/app/ELB-DEVOPSTEAM05/b36d3ae26f6f6e43",
+            "DNSName": "internal-ELB-DEVOPSTEAM05-995522892.eu-west-3.elb.amazonaws.com",
+            "CanonicalHostedZoneId": "Z3Q77PNBQS71R4",
+            "CreatedTime": "2024-03-21T15:40:09.410000+00:00",
+            "LoadBalancerName": "ELB-DEVOPSTEAM05",
+            "Scheme": "internal",
+            "VpcId": "vpc-03d46c285a2af77ba",
+            "State": {
+                "Code": "provisioning"
+            },
+            "Type": "application",
+            "AvailabilityZones": [
+                {
+                    "ZoneName": "eu-west-3a",
+                    "SubnetId": "subnet-0ae144aabdbd0ca14",
+                    "LoadBalancerAddresses": []
+                },
+                {
+                    "ZoneName": "eu-west-3b",
+                    "SubnetId": "subnet-0fe3940f8eec03cf3",
+                    "LoadBalancerAddresses": []
+                }
+            ],
+            "SecurityGroups": [
+                "sg-0fdbe692da3bc47eb"
+            ],
+            "IpAddressType": "ipv4"
+        }
+    ]
+}
 
+//Create Listener
+{
+    "Listeners": [
+        {
+            "ListenerArn": "arn:aws:elasticloadbalancing:eu-west-3:709024702237:listener/app/ELB-DEVOPSTEAM05/b36d3ae26f6f6e43/83c10b2794f36108",
+            "LoadBalancerArn": "arn:aws:elasticloadbalancing:eu-west-3:709024702237:loadbalancer/app/ELB-DEVOPSTEAM05/b36d3ae26f6f6e43",
+            "Port": 8080,
+            "Protocol": "HTTP",
+            "DefaultActions": [
+                {
+                    "Type": "forward",
+                    "TargetGroupArn": "arn:aws:elasticloadbalancing:eu-west-3:709024702237:targetgroup/TG-DEVOPSTEAM05/90c93af8c3baa5b3",
+                    "ForwardConfig": {
+                        "TargetGroups": [
+                            {
+                                "TargetGroupArn": "arn:aws:elasticloadbalancing:eu-west-3:709024702237:targetgroup/TG-DEVOPSTEAM05/90c93af8c3baa5b3",
+                                "Weight": 1
+                            }
+                        ],
+                        "TargetGroupStickinessConfig": {
+                            "Enabled": false
+                        }
+                    }
+                }
+            ]
+        }
+    ]
+}
 ```
 
 * Get the ELB FQDN (DNS NAME - A Record)
@@ -126,7 +281,8 @@ aws elbv2 create-load-balancer \
 //Via ClI ?
 aws elb describe-load-balancers \
 --load-balancer-name LB.name \
---query LoadBalancerDescriptions[*].DNSName \
+--query "LoadBalancerDescriptions[*].DNSName" \
+--profile $PROFILE \
 --output table
 
 // Connect to the LD and launch the following command
