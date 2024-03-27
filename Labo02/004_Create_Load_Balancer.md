@@ -127,8 +127,7 @@ aws elbv2 create-target-group \
     --target-type instance \
     --vpc-id $VPC_ID \
     --profile $PROFILE
-// The required parameters, that are already by default like this, we didnt respecified in the command
-// In the output below we can see that theyre configured correctly
+
 // We didn't respecified parameters with correct default values such "Timeout" and "IP Adress Type"
 
 // Registers intances to target groups
