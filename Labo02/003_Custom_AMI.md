@@ -311,6 +311,6 @@ This works, because both instances are connected with the same database.
 * Observations ?
 
 ```
-If we configure a profile picture for the user, we see on the other instance that the user does have a profile picture configured now.
-But we don't see the picture on the other instance. This probably because drupal doesn't save the images in the db but locally on the server.
+If we configure a profile picture for the user, we see on the other instance that the user does have a profile picture configured.
+However the picture is not available on the other instance. Probably because drupal doesn't save images in the DB but locally on the server.
 ```
