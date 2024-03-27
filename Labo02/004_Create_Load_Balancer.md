@@ -129,6 +129,7 @@ aws elbv2 create-target-group \
     --profile $PROFILE
 // The required parameters, that are already by default like this, we didnt respecified in the command
 // In the output below we can see that theyre configured correctly
+// We didn't respecified parameters with correct default values such "Timeout" and "IP Adress Type"
 
 // Registers intances to target groups
 aws elbv2 register-targets \
@@ -165,7 +166,7 @@ aws elbv2 register-targets \
 }
 
 // Register targets to the target group
-//No output if successful
+//No output since input is successful
 ```
 
 
@@ -350,8 +351,7 @@ Address: 10.0.5.136
 Name:   internal-ELB-DEVOPSTEAM05-995522892.eu-west-3.elb.amazonaws.com
 Address: 10.0.5.8
 
-When we do a nslookup from our local machines for the FQND of the Loadbalancer we receive two local IP-Addresses. (10.0.5.8 and 10.0.5.136)
-Those local ip-addresses are published by the DNS servers of AWS and this helps us to establish the SSH Tunnel directly with the FQDN name.
+After doing a nslookup from our local machines for the load balancer's FQDN, we receive two local IP-Addresses, 10.0.5.8 and 10.0.5.136 , which are published by AWS DNS servers and this helps us establish a SSH Tunnel directly with the FQDN name.
 ```
 
 * From your Drupal instance, identify the ip from which requests are sent by the Load Balancer.
@@ -359,14 +359,13 @@ Those local ip-addresses are published by the DNS servers of AWS and this helps 
 Help : execute `tcpdump port 8080`
 
 ```
-The load balancer sends the requests from the ip addresses we found with the nslookup. (10.0.5.8 and 10.0.5.136)
+The load balancer sends the requests from the IP addresses we found at the previous question. (10.0.5.8 and 10.0.5.136)
 ```
 
 * In the Apache access log identify the health check accesses from the
   load balancer and copy some samples into the report.
 
 ```
-//TODO
 cat ~/stack/apache2/logs/access_log
 10.0.5.8 - - [21/Mar/2024:17:00:22 +0000] "GET / HTTP/1.1" 200 5152
 10.0.5.136 - - [21/Mar/2024:17:00:28 +0000] "GET / HTTP/1.1" 200 5152
@@ -377,4 +376,6 @@ cat ~/stack/apache2/logs/access_log
 10.0.5.8 - - [21/Mar/2024:17:00:52 +0000] "GET / HTTP/1.1" 200 5152
 10.0.5.136 - - [21/Mar/2024:17:00:58 +0000] "GET / HTTP/1.1" 200 5152
 10.0.5.8 - - [21/Mar/2024:17:01:02 +0000] "GET / HTTP/1.1" 200 5152
+
+We can see that Health Checks are coming from 2 differents IP addresses, each coming from a different Availibility Zone. Thus, we can deduce that our appication load balance creates a specific entity inside each AZ to forwards traffic to each instances. We can see that its default load balancing algorithm is Round-Robin.
 ```
