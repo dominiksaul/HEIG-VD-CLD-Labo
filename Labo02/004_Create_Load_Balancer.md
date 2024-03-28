@@ -351,6 +351,7 @@ Name:   internal-ELB-DEVOPSTEAM05-995522892.eu-west-3.elb.amazonaws.com
 Address: 10.0.5.8
 
 After doing a nslookup from our local machines for the load balancer's FQDN, we receive two local IP-Addresses, 10.0.5.8 and 10.0.5.136 , which are published by AWS DNS servers and this helps us establish a SSH Tunnel directly with the FQDN name.
+There is one IP Address per Subnet.
 ```
 
 * From your Drupal instance, identify the ip from which requests are sent by the Load Balancer.
@@ -358,7 +359,7 @@ After doing a nslookup from our local machines for the load balancer's FQDN, we 
 Help : execute `tcpdump port 8080`
 
 ```
-The load balancer sends the requests from the IP addresses we found at the previous question. (10.0.5.8 and 10.0.5.136)
+The load balancer sends the requests from both of the two IP addresses we found in the previous question to our drupal instances. (10.0.5.8 and 10.0.5.136)
 ```
 
 * In the Apache access log identify the health check accesses from the
@@ -376,5 +377,8 @@ cat ~/stack/apache2/logs/access_log
 10.0.5.136 - - [21/Mar/2024:17:00:58 +0000] "GET / HTTP/1.1" 200 5152
 10.0.5.8 - - [21/Mar/2024:17:01:02 +0000] "GET / HTTP/1.1" 200 5152
 
-We can see that Health Checks are coming from 2 differents IP addresses, each coming from a different Availibility Zone. Thus, we can deduce that our appication load balance creates a specific entity inside each AZ to forwards traffic to each instances. We can see that its default load balancing algorithm is Round-Robin.
+As we already saw in the question before, the two IP Addresses of the Load Balancer are communicating with each of our Drupal servers.
+Since the Health Checks are done from both IP Addresses, we can deduce that our application load balancer runs in two entities (one in each Subnet and Availibility Zone) and both of those entities check if our drupal servers are still online and available.
+
+In practice when we then reach out to connect via the LB to one of our Drupal instances, our machine resolves the DNS name of the LB and takes randomly one of the IP addresses and LB entities (round robin).
 ```
