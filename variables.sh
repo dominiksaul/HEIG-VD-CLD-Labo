@@ -39,5 +39,6 @@ RDS_DB_DRUPAL_USER="bn_drupal"
 RDS_DB_DRUPAL_PW="20e91a2b1ef64b0912e6044d5fd4e8d3b62738609df7229ffb58e170793e688d"
 
 TARGETGROUP_ARN="arn:aws:elasticloadbalancing:eu-west-3:709024702237:targetgroup/TG-DEVOPSTEAM05/90c93af8c3baa5b3"
-LOADBALANCER_ARN="arn:aws:elasticloadbalancing:eu-west-3:709024702237:loadbalancer/app/ELB-DEVOPSTEAM05/b36d3ae26f6f6e43"
-LOADBALANCER_DNS_NAME="internal-ELB-DEVOPSTEAM05-995522892.eu-west-3.elb.amazonaws.com"
+LOADBALANCER_ARN="arn:aws:elasticloadbalancing:eu-west-3:709024702237:loadbalancer/app/ELB-DEVOPSTEAM05/48373553eb99f53e"
+LOADBALANCER_DNS_NAME="internal-ELB-DEVOPSTEAM05-599445391.eu-west-3.elb.amazonaws.com"
+LAUNCH_CONFIGURATION_ARN="arn:aws:autoscaling:eu-west-3:709024702237:launchConfiguration:735db93b-78cc-497c-9381-dc005d3673ee:launchConfigurationName/LT-DEVOPSTEAM05"

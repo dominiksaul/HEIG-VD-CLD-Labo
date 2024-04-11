@@ -207,6 +207,7 @@ aws elbv2 create-load-balancer \
     --port 8080 \
     --default-actions Type=forward,TargetGroupArn=$TARGETGROUP_ARN \
     --profile $PROFILE
+    
 [OUTPUT]
 // Create application load balancers
 {
