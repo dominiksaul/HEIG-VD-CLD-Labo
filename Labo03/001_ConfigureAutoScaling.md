@@ -101,8 +101,7 @@ aws elbv2 create-listener \
 }
 ```
 
-
-## Create a new launch configuration. 
+## Create a new launch template. 
 
 |Key|Value|
 |:--|:--|
@@ -120,6 +119,7 @@ aws elbv2 create-listener \
 
 ```bash
 [INPUT]
+//cli command is optionnal. Important is the screen shot to delivery in next step (testing and validation)
 #cli command
 aws autoscaling create-launch-configuration \
     --launch-configuration-name LT-${GROUP_NAME} \
@@ -128,7 +128,7 @@ aws autoscaling create-launch-configuration \
     --security-groups ${SECURITY_GROUP_DMZ_ID} \
     --no-associate-public-ip-address \
     --profile $PROFILE
-    
+
 [OUTPUT]
 {
     "LaunchConfigurationName": "LT-DEVOPSTEAM05",
@@ -186,6 +186,7 @@ aws autoscaling create-launch-configuration \
 
 ```bash
 [INPUT]
+//cli command is optionnal. Important is the screen shot to delivery in next step (testing and validation)
 #cli command
 aws autoscaling create-auto-scaling-group \
     --auto-scaling-group-name ASGRP_${GROUP_NAME} \
@@ -200,7 +201,6 @@ aws autoscaling create-auto-scaling-group \
     --min-size 1 \
     --max-size 4 \
     --vpc-zone-identifier "subnet-5ea0c127,subnet-6194ea3b,subnet-c934b782"
-
 
 [OUTPUT]
 # done in the web console
