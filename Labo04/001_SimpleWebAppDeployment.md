@@ -67,6 +67,10 @@ Create a simple web application as follows.
 
    ```
    //TODO
+   source = https://cloud.google.com/appengine/docs/flexible/java/configuring-the-web-xml-deployment-descriptor
+
+   The web.xml file is used to configure java app and determine how URLs map to servets
+   
    ```
 
 8. Inspect the Google App Engine configuration file
