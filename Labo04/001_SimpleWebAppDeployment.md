@@ -56,7 +56,8 @@ Create a simple web application as follows.
    `HelloAppEngine` file. What does the code do?
 
    ```
-   //TODO
+   //TODO - In Progress
+   It defines the function that display the systems properties and username in the index.jsp and the servlet Hello App Engine which is accessible with the path /hello
    ```
 
 6. Note the annotation starting with `@WebServlet` in front of the
@@ -66,12 +67,12 @@ Create a simple web application as follows.
    `web.xml`. What information does it contain? And what is its use ?
 
    ```
-   //TODO
+   //TODO - In progress
    source = https://cloud.google.com/appengine/docs/flexible/java/configuring-the-web-xml-deployment-descriptor
 
-   The web.xml file is used to configure java app and determine how URLs map to servets
+   The web.xml file is used to configure java app deployment and determine how URLs map to servets
 
-   It contains the webapp namespace and the page that will first be served when we access the app. index.jsp in this case
+   It contains the webapp namespace and the page, that will first be shown, when we access the app. index.jsp in this case
    
    ```
 
@@ -79,8 +80,11 @@ Create a simple web application as follows.
    `appengine-web.xml` in `webapp/WEB-INF`. What information does it contain?
 
    ```
-   //TODO
-   
+   //TODO - In progress
+   It is an addidtional configuration file used by Google App Engine. 
+   In this file we can configure for example the Java version to use.
+
+   source: https://cloud.google.com/appengine/docs/legacy/standard/java/config/appref
    ```
 
 9. Edit the Google App Engine configuration file as follows:
@@ -93,6 +97,7 @@ Create a simple web application as follows.
 
     ```
     //TODO
+    It is the homepage served by the web.xml. We can see that it calls functions defined in the HelloAppEngine class. 
     ```
 
 ---
