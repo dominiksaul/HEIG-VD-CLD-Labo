@@ -90,5 +90,5 @@ Labo04/cld-gae/src/main/java/ch/heigvd/cld/lab/DatastoreWrite.java
 //TODO - Copy a screenshot of the local and the App Engine console with the Datastore Viewer.
 
 ```
-![img.png](img.png)
-![img_1.png](img_1.png)
+![img.png](images/img.png)
+![img_1.png](images/img_1.png)

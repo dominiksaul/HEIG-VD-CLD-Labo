@@ -62,20 +62,20 @@ Deliverables:
   ./vegeta attack -duration=10s -rate=200 -targets=/home/dsaul/kDrive/HEIG-VD/CLD/HEIG-VD-CLD-Labo/Labo04/vegeta/target1.list | tee results1.bin | ./vegeta report
   cat results1.bin | ./vegeta plot --title="Hello App Engine" > helloAppEngine.html
   ```
-  ![img_2.png](img_2.png)
-  ![img_3.png](img_3.png)
-- ![img_4.png](img_4.png)
-- ![img_5.png](img_5.png)
+  ![img_2.png](images/img_2.png)
+  ![img_3.png](images/img_3.png)
+- ![img_4.png](images/img_4.png)
+- ![img_5.png](images/img_5.png)
 - ![vegeta-hello.png](./vegeta/vegeta-hello.png)
 
   ```
   ./vegeta attack -duration=10s -rate=200 -targets=/home/dsaul/kDrive/HEIG-VD/CLD/HEIG-VD-CLD-Labo/Labo04/vegeta/target2.list | tee results2.bin | ./vegeta report
   cat results2.bin | ./vegeta plot --title="Datastore Write" > datastoreWrite.html
   ```
-  ![img_6.png](img_6.png)
-- ![img_7.png](img_7.png)
-- ![img_8.png](img_8.png)
-- ![img_9.png](img_9.png)
+  ![img_6.png](images/img_6.png)
+- ![img_7.png](images/img_7.png)
+- ![img_8.png](images/img_8.png)
+- ![img_9.png](images/img_9.png)
 - ![vegeta-write.png](./vegeta/vegeta-write.png)
 
   ```
@@ -88,6 +88,11 @@ Deliverables:
 
   ```
   //TODO
+  - Hello App Engine: Minimum is 30.676ms and maximum is 15.984s on vegeta and seems congruent to the Google Cloud Console
+  - Datastore Write : Minimum is 53.616ms and maximum is 14.752s on both.
+  
+  It is also interesting to note that in general, responses from the Hello servlet are faster than the Datastore Write.
+  We can see that 90% of responses coming from the Hello servlet are faster than the other ones.
   ```
 
 - Compare the response times shown by vegeta with the App Engine
@@ -95,6 +100,8 @@ Deliverables:
 
   ```
   //TODO
+  The response / latency times shown on the App Engine console report are higher than the response times in vegeta.
+  The difference between the two is probably due to a different measurement. However we had expected that latency measured by vegata would be higher than the one measured on Google, since there is the Network inbetween.
   ```
 
 - How many resources have you used to run these tests? From the
@@ -104,8 +111,21 @@ Deliverables:
 
   ```
   //TODO
+  Let's preface this answer by defining what is Cloud Firestore first: It is flexible, NoSQL cloud database build on Google
+  Cloud Infrastructure
+  - Cloud Firestore Read Operations: The number of access to the database to read entries inside
+  - Cloud Firestore API Calls: the number of time we use the dedicated API to interract with the database
+  - Cloud Firestore Store Data : The total size of all entries inside the database
+  - Data Sent to Cloud Firestore API : The total size of data send to the API
+  - Data Received from Cloud Firestore API : The total size of the data received in the reponses from the API
+  - Cloud Firestore Entity Fetch Ops: Number of read operations on Entities stored in the database
+  - Cloud Firestore Entity Writes: Number of write operations on Entities stored to the database
+  - Cloud Firestore Entity Delete: Number of delete operations on Entities from the database
+  - Cloud Firestore Entity Index Write Ops: The number of time we create an index for an entry manually or automaticallly
+  - Cloud Firestore Network Egress: Total size of network traffic coming from the database
+  - Cloud Storage Network (Egress) - Americas and EMEA: Total size of network traffic coming from the storage 
   ```
-  ![img_10.png](img_10.png)
+  ![img_10.png](images/img_10.png)
 
 - Let's suppose you become suspicious that the algorithm for the automatic scaling of
   instances is not working correctly. Imagine a way in which the algorithm could be broken. Which measures shown in the
@@ -113,6 +133,9 @@ Deliverables:
 
   ```
   //TODO
+  The algorithm can be broken in two ways: it doesn't scale up correctly or doesn't scale down when needed.
+  To test that it scales up correctly we can stress test our service and monitor that the number of the instances increases.
+  To test the downscaling we can stop this stress testing and check that the number of instances is reduced back to 1 or 0.
   ```
 
 ## Troubleshooting
