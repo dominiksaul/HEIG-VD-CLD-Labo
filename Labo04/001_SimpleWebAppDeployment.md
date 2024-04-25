@@ -67,7 +67,6 @@ Create a simple web application as follows.
    `web.xml`. What information does it contain? And what is its use ?
 
    ```
-   //TODO - In progress
    source = https://cloud.google.com/appengine/docs/flexible/java/configuring-the-web-xml-deployment-descriptor
 
    The web.xml file is used to configure java app deployment and determine how URLs map to servets
@@ -80,11 +79,10 @@ Create a simple web application as follows.
    `appengine-web.xml` in `webapp/WEB-INF`. What information does it contain?
 
    ```
-   //TODO - In progress
+    source: https://cloud.google.com/appengine/docs/legacy/standard/java/config/appref
+
    It is an addidtional configuration file used by Google App Engine. 
    In this file we can configure for example the Java version to use.
-
-   source: https://cloud.google.com/appengine/docs/legacy/standard/java/config/appref
    ```
 
 9. Edit the Google App Engine configuration file as follows:
@@ -96,8 +94,8 @@ Create a simple web application as follows.
     `index.jsp` spotted in `web.xml`. What is its use ?
 
     ```
-    //TODO
     It is the homepage served by the web.xml. We can see that it calls functions defined in the HelloAppEngine class. 
+    It is interesting to note that the .jsp extension is a popular view technology engine for Java application
     ```
 
 ---
