@@ -111,10 +111,10 @@ Deliverables:
 
   ```
   //TODO
-  Let's preface this answer by defining what is Cloud Firestore first: It is flexible, NoSQL cloud database build on Google
-  Cloud Infrastructure
-  - Cloud Firestore Read Operations: The number of access to the database to read entries inside
-  - Cloud Firestore API Calls: the number of time we use the dedicated API to interract with the database
+  Let's preface this answer by defining what is Cloud Firestore first: It is a flexible, NoSQL cloud database built on Google
+  Cloud Infrastructure.
+  - Cloud Firestore Read Operations: Nmber of access to the database to read entries inside
+  - Cloud Firestore API Calls: Number of time we use the dedicated API to interract with the database
   - Cloud Firestore Store Data : The total size of all entries inside the database
   - Data Sent to Cloud Firestore API : The total size of data send to the API
   - Data Received from Cloud Firestore API : The total size of the data received in the reponses from the API
@@ -133,9 +133,15 @@ Deliverables:
 
   ```
   //TODO
-  The algorithm can be broken in two ways: it doesn't scale up correctly or doesn't scale down when needed.
-  To test that it scales up correctly we can stress test our service and monitor that the number of the instances increases.
-  To test the downscaling we can stop this stress testing and check that the number of instances is reduced back to 1 or 0.
+  The algorithm can have two problems: scaling up and scaling down unproperly.
+
+  To check the former, we can use the following:
+  - Checking latency measurement in the console: Servers overload when receiving a huge unexpected amount of requests. Consequently slowing down the response time and increasing latency.  
+  - We can also actively test by stress testing our service and monitor the number of instances increases.
+  
+  To check the latter:
+  - Keeping an eye on the amount of incoming requests and the number of instances: If we notice a consequent decrease of incoming request while the number of instances remain high and do not appear to decrease, we have to investigate why the algorithmn isn't terminating instances.
+  - Stopping our previous stress test and check that the number of instances is reduced back to 1 or 0.
   ```
 
 ## Troubleshooting
