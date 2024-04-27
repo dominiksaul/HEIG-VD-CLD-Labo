@@ -68,8 +68,8 @@ Create a simple web application as follows.
    ```
    source = https://cloud.google.com/appengine/docs/flexible/java/configuring-the-web-xml-deployment-descriptor
 
-   The web.xml file is used to configure java app deployment and determine how URLs map to servets
-   It contains the webapp namespace and the page, that will first be shown, when we access the app. index.jsp in this case
+   The web.xml file is used to configure java app deployment and determine how URLs map to servlets. It is for this reason it is called the "Deployment Descriptor".
+   It contains the webapp namespace and the page, that will first be shown, when we access the app. index.jsp in this case. 
    
    ```
 
@@ -79,8 +79,8 @@ Create a simple web application as follows.
    ```
    source: https://cloud.google.com/appengine/docs/legacy/standard/java/config/appref
 
-   It is an addidtional configuration file used by Google App Engine. 
-   In this file we can configure for example the Java version to use.
+   It is an addidtional configuration file used by Google App Engine.
+   It specifies informations about our application such as the Java version.
    ```
 
 9. Edit the Google App Engine configuration file as follows:
@@ -93,7 +93,7 @@ Create a simple web application as follows.
 
     ```
     It is the homepage served by the web.xml. We can see that it calls functions defined in the HelloAppEngine class. 
-    It is interesting to note that the .jsp extension is a popular view technology engine for Java application
+    .jsp extension file is a popular view technology engine for Java application.
     ```
 
 ---
@@ -164,7 +164,7 @@ Deliverables:
 
   ```
   //TODO Java class files
-  Defines servlets and differents functions useable by the applications for a variety of operations.
+  Defines servlets and differents functions useable by the application for a variety of operations.
   ```
 
   ```
@@ -177,11 +177,11 @@ Deliverables:
   ```
   //TODO appengine-web.xml
   It is an addidtional configuration file used by Google App Engine.
-  In this file we can configure for example the Java version to use.
+  It specifies informations about our application such as the Java version.
   ```
 
   ```
   //TODO index.jsp
   It is the homepage served by the web.xml. We can see that it calls functions defined in the HelloAppEngine class.
-  It is interesting to note that the .jsp extension is a popular view technology engine for Java application
+  .jsp extension file is a popular view technology engine for Java application.
   ```
