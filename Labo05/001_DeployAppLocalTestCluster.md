@@ -148,6 +148,7 @@ It also needs to be initialized with the following environment variables (check 
 
   * `API_ENDPOINT_URL`: URL where the API can be accessed e.g., <http://localhost:9000>
     * *What value must be set for this URL ?*
+    * The DNS name and port which was assigned to the api service (http://api-svc:8081)
 
 > Hint: remember that anything you define as a Service will be assigned a DOMAIN that is visible via DNS everywhere in the cluster and a PORT.
 
@@ -183,10 +184,45 @@ Document any difficulties you faced and how you overcame them. Copy the object d
 
 ```yaml
 # api-svc.yaml
+
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    component: api
+  name: api-svc
+spec:
+  ports:
+    - port: 8081
+      targetPort: 8081
+      name: api
+  selector:
+    app: todo
+    component: api
+  type: ClusterIP
+
 ```
 
 ```yaml
 # frontend-pod.yaml
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: frontend
+  labels:
+    component: frontend
+    app: todo
+spec:
+  containers:
+    - name: frontend
+      image: icclabcna/ccp2-k8s-todo-frontend
+      ports:
+        - containerPort: 8080
+      env:
+        - name: API_ENDPOINT_URL
+          value: http://api-svc:8081
+
 ```
 
 > [!TIP]
