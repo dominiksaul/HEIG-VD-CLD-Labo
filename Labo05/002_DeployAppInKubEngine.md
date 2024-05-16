@@ -73,12 +73,53 @@ Document any difficulties you faced and how you overcame them. Copy the object d
 
 ```yaml
 # frontend-svc.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    component: frontend
+  name: frontend-svc
+spec:
+  ports:
+    - port: 80
+      targetPort: 8080
+      name: frontend
+  selector:
+    app: todo
+    component: frontend
+  type: LoadBalancer
 ```
 
 Take a screenshot of the cluster details from the GKE console. Copy the output of the `kubectl describe` command to describe your load balancer once completely initialized.
 
 > // TODO
+```
+```
+![img.png](img/googlecloudclusterdetail.png)
 
-```````
 // TODO object descriptions
-```````
+```bash
+$ kubectl describe service frontend-svc
+Name:                     frontend-svc
+Namespace:                default
+Labels:                   component=frontend
+Annotations:              cloud.google.com/neg: {"ingress":true}
+Selector:                 app=todo,component=frontend
+Type:                     LoadBalancer
+IP Family Policy:         SingleStack
+IP Families:              IPv4
+IP:                       10.42.52.116
+IPs:                      10.42.52.116
+LoadBalancer Ingress:     34.78.59.99
+Port:                     frontend  80/TCP
+TargetPort:               8080/TCP
+NodePort:                 frontend  30891/TCP
+Endpoints:                10.112.0.9:8080
+Session Affinity:         None
+External Traffic Policy:  Cluster
+Events:
+  Type    Reason                Age   From                Message
+  ----    ------                ----  ----                -------
+  Normal  EnsuringLoadBalancer  13m   service-controller  Ensuring load balancer
+  Normal  EnsuredLoadBalancer   12m   service-controller  Ensured load balancer
+```
