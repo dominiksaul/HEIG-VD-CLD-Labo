@@ -69,12 +69,13 @@ You may also use `kubectl get all` repeatedly to see a list of all resources.  Y
 
   * How can you update a component? (see "Updating a Deployment" in the deployment documentation)
 
-    > // TODO 
-> 
+    > Using the command : kubectl edit deployment/<deploy-name>
 
 ## Subtask 3.3 - Put autoscaling in place and load-test it
 
 On the GKE cluster deploy autoscaling on the Frontend with a target CPU utilization of 30% and number of replicas between 1 and 4. 
+> We use the following command: kubectl autoscale deployment/frontend-deployment --min=1 --max=4 --cpu-percent=30
+
 
 Load-test using Vegeta (500 requests should be enough).
 
@@ -203,4 +204,36 @@ spec:
           env:
             - name: API_ENDPOINT_URL
               value: http://api-svc:8081
+          resources:
+            requests:
+              cpu: 10m
+```
+
+```
+Output of describe of autoscaler
+
+gdomingo@CI39975 files % kubectl describe horizontalpodautoscalers.autoscaling
+Name:                                                  frontend-deployment
+Namespace:                                             default
+Labels:                                                <none>
+Annotations:                                           <none>
+CreationTimestamp:                                     Sat, 18 May 2024 15:21:33 +0200
+Reference:                                             Deployment/frontend-deployment
+Metrics:                                               ( current / target )
+  resource cpu on pods  (as a percentage of request):  0% (0) / 30%
+Min replicas:                                          1
+Max replicas:                                          4
+Deployment pods:                                       4 current / 4 desired
+Conditions:
+  Type            Status  Reason               Message
+  ----            ------  ------               -------
+  AbleToScale     True    ScaleDownStabilized  recent recommendations were higher than current one, applying the highest recent recommendation
+  ScalingActive   True    ValidMetricFound     the HPA was able to successfully calculate a replica count from cpu resource utilization (percentage of request)
+  ScalingLimited  True    TooManyReplicas      the desired replica count is more than the maximum replica count
+Events:
+  Type     Reason                   Age                   From                       Message
+  ----     ------                   ----                  ----                       -------
+  Warning  FailedGetResourceMetric  20m (x10 over 22m)    horizontal-pod-autoscaler  missing request for cpu
+  Warning  FailedGetResourceMetric  2m39s (x71 over 22m)  horizontal-pod-autoscaler  No recommendation
+
 ```

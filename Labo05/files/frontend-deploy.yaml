@@ -24,3 +24,6 @@ spec:
         env:
         - name: API_ENDPOINT_URL
           value: http://api-svc:8081
+        resources:
+          requests:
+            cpu: 10m
