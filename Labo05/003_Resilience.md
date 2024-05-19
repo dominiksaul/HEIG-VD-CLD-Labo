@@ -112,6 +112,29 @@ Document your observations in the lab report. Document any difficulties you face
 
 ```````sh
 // TODO autoscaling description
+kubectl describe horizontalpodautoscalers.autoscaling
+Name:                                                  frontend-deployment
+Namespace:                                             default
+Labels:                                                <none>
+Annotations:                                           <none>
+CreationTimestamp:                                     Sat, 18 May 2024 15:21:33 +0200
+Reference:                                             Deployment/frontend-deployment
+Metrics:                                               ( current / target )
+  resource cpu on pods  (as a percentage of request):  0% (0) / 30%
+Min replicas:                                          1
+Max replicas:                                          4
+Deployment pods:                                       4 current / 4 desired
+Conditions:
+  Type            Status  Reason               Message
+  ----            ------  ------               -------
+  AbleToScale     True    ScaleDownStabilized  recent recommendations were higher than current one, applying the highest recent recommendation
+  ScalingActive   True    ValidMetricFound     the HPA was able to successfully calculate a replica count from cpu resource utilization (percentage of request)
+  ScalingLimited  True    TooManyReplicas      the desired replica count is more than the maximum replica count
+Events:
+  Type     Reason                   Age                   From                       Message
+  ----     ------                   ----                  ----                       -------
+  Warning  FailedGetResourceMetric  20m (x10 over 22m)    horizontal-pod-autoscaler  missing request for cpu
+  Warning  FailedGetResourceMetric  2m39s (x71 over 22m)  horizontal-pod-autoscaler  No recommendation
 ```````
 
 ```yaml
@@ -208,33 +231,4 @@ spec:
           resources:
             requests:
               cpu: 10m
-```
-
-```
-Output of describe of autoscaler
-
-gdomingo@CI39975 files % kubectl describe horizontalpodautoscalers.autoscaling
-Name:                                                  frontend-deployment
-Namespace:                                             default
-Labels:                                                <none>
-Annotations:                                           <none>
-CreationTimestamp:                                     Sat, 18 May 2024 15:21:33 +0200
-Reference:                                             Deployment/frontend-deployment
-Metrics:                                               ( current / target )
-  resource cpu on pods  (as a percentage of request):  0% (0) / 30%
-Min replicas:                                          1
-Max replicas:                                          4
-Deployment pods:                                       4 current / 4 desired
-Conditions:
-  Type            Status  Reason               Message
-  ----            ------  ------               -------
-  AbleToScale     True    ScaleDownStabilized  recent recommendations were higher than current one, applying the highest recent recommendation
-  ScalingActive   True    ValidMetricFound     the HPA was able to successfully calculate a replica count from cpu resource utilization (percentage of request)
-  ScalingLimited  True    TooManyReplicas      the desired replica count is more than the maximum replica count
-Events:
-  Type     Reason                   Age                   From                       Message
-  ----     ------                   ----                  ----                       -------
-  Warning  FailedGetResourceMetric  20m (x10 over 22m)    horizontal-pod-autoscaler  missing request for cpu
-  Warning  FailedGetResourceMetric  2m39s (x71 over 22m)  horizontal-pod-autoscaler  No recommendation
-
 ```
