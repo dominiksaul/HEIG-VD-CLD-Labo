@@ -72,6 +72,32 @@ You can now initialize the Terraform state:
 //TODO
 [OUTPUT]
 ```bash
+$ terraform init
+
+Initializing the backend...
+
+Successfully configured the backend "local"! Terraform will automatically
+use this backend unless the backend configuration changes.
+
+Initializing provider plugins...
+- Finding latest version of hashicorp/google...
+- Installing hashicorp/google v5.30.0...
+- Installed hashicorp/google v5.30.0 (signed by HashiCorp)
+
+Terraform has created a lock file .terraform.lock.hcl to record the provider
+selections it made above. Include this file in your version control repository
+so that Terraform can guarantee to make the same selections by default when
+you run "terraform init" in the future.
+
+Terraform has been successfully initialized!
+
+You may now begin working with Terraform. Try running "terraform plan" to see
+any changes that are required for your infrastructure. All Terraform commands
+should now work.
+
+If you ever set or change modules or backend configuration for Terraform,
+rerun this command to reinitialize your working directory. If you forget, other
+commands will detect it and remind you to do so if necessary.
 ```
     
 * What files were created in the `terraform` directory? Make sure to look also at hidden files and directories (`ls -a`).
@@ -79,14 +105,18 @@ You can now initialize the Terraform state:
 //TODO
 [OUTPUT]
 ```bash
+Terraform has created a lock file .terraform.lock.hcl to record the provider
+selections it made above. Include this file in your version control repository
+so that Terraform can guarantee to make the same selections by default when
+you run "terraform init" in the future.
 ```
 
 * What are they used for?
 
-//TODO
-|File/FolderName|Explanation|
-|:--|:--|
-|||
+| File/FolderName           | Explanation                                                                                                                                                                                                                                                                                                                        |
+|:--------------------------|:-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| file: .terraform.lock.hcl | File to record th eprovider selections made during the init. With this file present Terraform will make the same selection in the future                                                                                                                                                                                           |
+| folder .terraform         | A hidden directory, which Terraform uses to manage cached provider plugins and modules, record which workspace is currently active, and record the last known backend configuration in case it needs to migrate state on the next run. This directory is automatically managed by Terraform, and is created during initialization. |
 
 
 * Check that your Terraform configuration is valid:
@@ -98,6 +128,7 @@ terraform validate
 //TODO
 [OUTPUT]
 ```bash
+Success! The configuration is valid.
 ```
 
 * Create an execution plan to preview the changes that will be made to your infrastructure and save it locally:
@@ -109,6 +140,8 @@ terraform plan -input=false -out=.terraform/plan.cache
 ```
 //TODO - copy the command result in a file named "planCache.json" and add it to your lab repo.
 ```
+[link to file](./appendices/terraform/planCache.json)
+
 
 * If satisfied with your execution plan, apply it:
 
@@ -117,18 +150,56 @@ terraform plan -input=false -out=.terraform/plan.cache
 ```
 
 ```
-//TODO - copy the command result in a file name "planCacheApplied.txt
+//TODO - copy the command result in a file name "planCacheApplied.txt"
 ```
+[link to file](./appendices/terraform/planCacheApplied.json)
 
 * Test access via ssh
 
 //TODO
 [INPUT]
 ```bash
+ssh devopsteam05@34.65.166.195 -i ../credentials/labgce-ssh-key
 ```
 
 [OUTPUT]
 ```
+The authenticity of host '34.65.166.195 (34.65.166.195)' can't be established.
+ED25519 key fingerprint is SHA256:zBzLCvREDHnJ/8ph29Gai8C6uzmxocDJuY+2PgcfNa4.
+This key is not known by any other names
+Are you sure you want to continue connecting (yes/no/[fingerprint])? yes
+Warning: Permanently added '34.65.166.195' (ED25519) to the list of known hosts.
+Welcome to Ubuntu 20.04.6 LTS (GNU/Linux 5.15.0-1060-gcp x86_64)
+
+ * Documentation:  https://help.ubuntu.com
+ * Management:     https://landscape.canonical.com
+ * Support:        https://ubuntu.com/pro
+
+ System information as of Thu May 23 14:11:24 UTC 2024
+
+  System load:  0.16              Processes:             98
+  Usage of /:   19.1% of 9.51GB   Users logged in:       0
+  Memory usage: 36%               IPv4 address for ens4: 10.172.0.2
+  Swap usage:   0%
+
+Expanded Security Maintenance for Applications is not enabled.
+
+0 updates can be applied immediately.
+
+Enable ESM Apps to receive additional future security updates.
+See https://ubuntu.com/esm or run: sudo pro status
+
+
+
+The programs included with the Ubuntu system are free software;
+the exact distribution terms for each program are described in the
+individual files in /usr/share/doc/*/copyright.
+
+Ubuntu comes with ABSOLUTELY NO WARRANTY, to the extent permitted by
+applicable law.
+
+devopsteam05@devopsteam05:~$ 
+
 ```
 
 If no errors occur, you have successfully managed to create a VM on Google Cloud using Terraform. You should see the IP of the Google Compute instance in the console. Save the instance IP, it will be used later.
@@ -173,5 +244,6 @@ Deliverables:
 ```
 //TODO
 ```
+![img.png](./img/img.png)
 
 * Deliver a folder "terraform" with your configuration.
