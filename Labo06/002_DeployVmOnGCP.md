@@ -213,30 +213,41 @@ Deliverables:
 
 ```
 //TODO
+backend.tf: Defines the backend configuration for storing the Terraform state.
+main.tf: Contains the primary infrastructure configuration, such as the Google Compute instance.
+outputs.tf: Specifies outputs to display information after Terraform applies changes.
+variables.tf: Defines the variables used in the Terraform configuration.
+terraform.tfvars: Provides values for the variables defined in variables.tf.
 ```
 
 * Explain what the files created by Terraform are used for.
 
 ```
 //TODO
+.terraform.lock.hcl: Ensures consistency in provider versions.
+.terraform directory: Stores the plugins and module cache, along with other state-related files.
 ```
 
 * Where is the Terraform state saved? Imagine you are working in a team and the other team members want to use Terraform, too, to manage the cloud infrastructure. Do you see any problems with this? Explain.
 
 ```
 //TODO
+The Terraform state is saved locally in the terraform.tfstate file within the .terraform directory. In a team setting, managing state locally can lead to conflicts. A remote state backend (e.g., Google Cloud Storage) is recommended for team environments to ensure state consistency.
 ```
 
 * What happens if you reapply the configuration (1) without changing `main.tf` (2) with a change in `main.tf`? Do you see any changes in Terraform's output? Why? Can you think of examples where Terraform needs to delete parts of the infrastructure to be able to reconfigure it?
 
 ```
 //TODO
+Without changing main.tf: No changes will occur, as the infrastructure is already in the desired state.
+With a change in main.tf: Terraform will apply the necessary updates. Some changes might require recreating resources (e.g., changing the machine type of an instance).
 ```
 
 * Explain what you would need to do to manage multiple instances.
 
 ```
 //TODO
+To manage multiple instances, you can use a count parameter in the google_compute_instance resource block and parameterize the instance names.
 ```
 
 * Take a screenshot of the Google Cloud Console showing your Google Compute instance and put it in the report.
